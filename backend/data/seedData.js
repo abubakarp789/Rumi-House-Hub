@@ -123,7 +123,7 @@ const seedDB = async () => {
       {
         name: "Namal Environmental Club (NEC)",
         category: "social",
-        description: "Spearheads environmental awareness campaigns, massive tree plantation drives, recycling initiatives, and cleaning actions supporting a sustainable Green Namal campus.",
+        description: "Preserves the Green Namal vision by conducting plantation drives, green recycling initiatives, campus clean-ups, and environmental awareness seminars in the Salt Range.",
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
@@ -132,7 +132,7 @@ const seedDB = async () => {
       {
         name: "Namal Idea Club (NIC)",
         category: "technical",
-        description: "Cultivates design thinking, technological entrepreneurship, and inventive problem-solving among students, helping turn ideas into viable tech prototypes.",
+        description: "Draws out students' entrepreneurial proficiency, providing business, digital marketing, and stock insights, and supporting student startups via the ICON incubation centre.",
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
@@ -141,7 +141,7 @@ const seedDB = async () => {
       {
         name: "Namal Society for Social Impact (NSSI)",
         category: "social",
-        description: "Champions community welfare, blood donation camps, local school volunteering, and social development programs targeting the uplift of underprivileged areas around Mianwali.",
+        description: "Champions community welfare, student financial support, blood donation drives with local sargodha foundations, and social educational initiatives in Mianwali.",
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
@@ -150,7 +150,7 @@ const seedDB = async () => {
       {
         name: "Namal Literary & Debating Society (LDS)",
         category: "literary",
-        description: "Organizes university-wide parliamentary debating competitions, creative writing contests, poetry recitals, and classical Urdu and English literary workshops.",
+        description: "Pioneer student society for literature, debating, creative writing, and open-mics, maintaining classical discourse and competitive speech skills.",
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
@@ -159,7 +159,7 @@ const seedDB = async () => {
       {
         name: "Namal Sports & Adventure Club (NSAC)",
         category: "sports",
-        description: "Promotes physical well-being, competitive sportsmanship, and outdoor adventure activities, including trekking trips and inter-house leagues.",
+        description: "Ensures students participate in physical drills, recreational games on and off campus, Sports Gala campaigns, and inter-house football leagues near Namal Lake.",
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
@@ -168,11 +168,47 @@ const seedDB = async () => {
       {
         name: "Namal Dramatic Club (NDC)",
         category: "arts",
-        description: "Inspires stage acting, theatrical production, playwriting, and cultural performances, organizing annual campus dramas and hosting theater festivals.",
+        description: "Provides a brilliant platform for stage plays, theatrical expression, playwriting, annual campus dramas, and music ensembles.",
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
         memberCount: 58
+      },
+      {
+        name: "Namal Media Club (VoN)",
+        category: "arts",
+        description: "Known as the 'Eyes and ears of Namal'. Captures, logs, and promotes university events, photography courses, and student digital newsletters.",
+        patronName: "Faculty Patron",
+        facultyCoordinator: "Society Coordinator",
+        executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
+        memberCount: 48
+      },
+      {
+        name: "Skills Development Society (SDS)",
+        category: "literary",
+        description: "Provides language proficiency assistance, soft skills development, presentation courses, and career readiness training.",
+        patronName: "Faculty Patron",
+        facultyCoordinator: "Society Coordinator",
+        executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
+        memberCount: 65
+      },
+      {
+        name: "Open Source Society (OSS)",
+        category: "technical",
+        description: "Promotes open-source software contributions, digital tech talks, modern code versioning, and collective coding sprints.",
+        patronName: "Faculty Patron",
+        facultyCoordinator: "Society Coordinator",
+        executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
+        memberCount: 52
+      },
+      {
+        name: "Namal Computing Society (NCS)",
+        category: "technical",
+        description: "Drives competitive coding championships, technical programming sprints, neural network workshops, and tech expos inside the Huawei Lab.",
+        patronName: "Faculty Patron",
+        facultyCoordinator: "Society Coordinator",
+        executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
+        memberCount: 80
       }
     ];
 
@@ -190,72 +226,86 @@ const seedDB = async () => {
     const eventsData = [
       {
         societyId: findSocietyId("Namal Sports & Adventure Club (NSAC)"),
-        title: "Inter-House Sports Gala",
+        title: "Namal Sports Gala 2026",
         type: "sports",
         status: "approved",
-        location: "Namal Sports Complex",
+        location: "Namal Sports Facility",
         startDateTime: new Date("2026-06-15T09:00:00"),
         endDateTime: new Date("2026-06-15T18:00:00"),
-        capacity: 100,
+        capacity: 150,
         registered: 1, // Will seed studentUser RSVP
-        description: "The ultimate sports competition where all university houses compete in cricket, football, basketball, and track events. Join to represent Rumi House and claim the championship shield!",
+        description: "The premier athletic league of Namal University where house teams compete fiercely in athletics, cricket, football, and badminton near Namal Lake.",
         qrCodeToken: "rumi_secure_token_sports_gala_101",
         createdBy: executiveUser._id
       },
       {
-        societyId: findSocietyId("Rumi Debating Club"),
-        title: "Rumi Debate Workshop",
-        type: "workshop",
+        societyId: findSocietyId("Namal Society for Social Impact (NSSI)"),
+        title: "Blood Donation Drive (Sundas Foundation)",
+        type: "seminar",
         status: "approved",
-        location: "Rumi House Study Lounge",
-        startDateTime: new Date("2026-06-05T16:30:00"),
-        endDateTime: new Date("2026-06-05T18:30:00"),
-        capacity: 40,
+        location: "Academic Block",
+        startDateTime: new Date("2026-06-08T10:00:00"),
+        endDateTime: new Date("2026-06-08T16:00:00"),
+        capacity: 100,
         registered: 0,
-        description: "An interactive masterclass on debate structures, motion analysis, and arguments building, led by veteran senior speakers. Excellent preparation for upcoming inter-university declamations.",
-        qrCodeToken: "rumi_secure_token_debate_102",
-        createdBy: executiveUser._id
-      },
-      {
-        societyId: findSocietyId("Namal Literary & Debating Society (LDS)"),
-        title: "Poetry & Literary Night",
-        type: "competition",
-        status: "approved",
-        location: "Main Auditorium",
-        startDateTime: new Date("2026-06-20T19:00:00"),
-        endDateTime: new Date("2026-06-20T22:30:00"),
-        capacity: 200,
-        registered: 0,
-        description: "An evening of poetry recitations, literary discussions, and musical performances celebrating Eastern and Western classical literature.",
-        qrCodeToken: "rumi_secure_token_poetry_103",
-        createdBy: executiveUser._id
-      },
-      {
-        societyId: findSocietyId("Namal Environmental Club (NEC)"),
-        title: "Green Campus Tree Plantation",
-        type: "workshop",
-        status: "approved",
-        location: "Namal Botanical Garden",
-        startDateTime: new Date("2026-06-08T08:00:00"),
-        endDateTime: new Date("2026-06-08T12:00:00"),
-        capacity: 80,
-        registered: 0,
-        description: "A hands-on volunteer action to plant 200 native saplings across campus grounds. Let's act collectively to reduce carbon footprint and build a lush, sustainable environment.",
-        qrCodeToken: "rumi_secure_token_eco_104",
+        description: "Namal Society for Social Impact in collaboration with Sundas Foundation is organizing a voluntary blood donation drive. Come forward and save a life!",
+        qrCodeToken: "rumi_secure_token_blood_drive_102",
         createdBy: executiveUser._id
       },
       {
         societyId: findSocietyId("Namal Idea Club (NIC)"),
-        title: "Annual Alumni Homecoming Meetup",
-        type: "seminar",
-        status: "pendingApproval", // proposed, needs admin approval
-        location: "Executive Seminar Room",
-        startDateTime: new Date("2026-06-25T14:00:00"),
-        endDateTime: new Date("2026-06-25T17:00:00"),
+        title: "NAMAL Ideathon & Innovation Expo 2026",
+        type: "competition",
+        status: "approved",
+        location: "Main Building",
+        startDateTime: new Date("2026-06-22T09:00:00"),
+        endDateTime: new Date("2026-06-22T17:00:00"),
         capacity: 120,
         registered: 0,
-        description: "A prestigious networking and seminar session featuring Namal university alumni sharing industry experiences, startup journeys, and career development roadmaps.",
-        qrCodeToken: "rumi_secure_token_nic_105",
+        description: "Showcase your entrepreneurial ideas and creative startups. Compete for seed funding, pitch in front of industry leaders, and win attractive cash prizes at the annual expo.",
+        qrCodeToken: "rumi_secure_token_ideathon_103",
+        createdBy: executiveUser._id
+      },
+      {
+        societyId: findSocietyId("Namal Computing Society (NCS)"),
+        title: "NCS LLM & Generative AI Workshop",
+        type: "workshop",
+        status: "approved",
+        location: "Huawei Lab",
+        startDateTime: new Date("2026-06-05T14:30:00"),
+        endDateTime: new Date("2026-06-05T17:30:00"),
+        capacity: 60,
+        registered: 0,
+        description: "A comprehensive, hands-on workshop on Large Language Models, prompt engineering, and building agentic AI applications inside the Huawei Lab.",
+        qrCodeToken: "rumi_secure_token_ai_workshop_104",
+        createdBy: executiveUser._id
+      },
+      {
+        societyId: findSocietyId("Namal Computing Society (NCS)"),
+        title: "Namal Mathematics Carnival 4.0",
+        type: "competition",
+        status: "approved",
+        location: "Academic Block Auditorium",
+        startDateTime: new Date("2026-06-18T10:00:00"),
+        endDateTime: new Date("2026-06-18T15:00:00"),
+        capacity: 80,
+        registered: 0,
+        description: "Challenge your analytical capabilities in Namal's signature mathematics carnival featuring speed math, logic puzzles, and team quizzes.",
+        qrCodeToken: "rumi_secure_token_math_carnival_105",
+        createdBy: executiveUser._id
+      },
+      {
+        societyId: findSocietyId("Namal Sports & Adventure Club (NSAC)"),
+        title: "Inter-House Football Tournament",
+        type: "sports",
+        status: "pendingApproval",
+        location: "Namal Sports Facility",
+        startDateTime: new Date("2026-06-28T16:00:00"),
+        endDateTime: new Date("2026-06-28T19:30:00"),
+        capacity: 100,
+        registered: 0,
+        description: "Rumi House and other houses clash on the football pitch for the prestigious inter-house championship shield. Register as a player or join to support your house!",
+        qrCodeToken: "rumi_secure_token_football_106",
         createdBy: executiveUser._id
       }
     ];
@@ -264,7 +314,7 @@ const seedDB = async () => {
     console.log(`✅ Seeded ${seededEvents.length} events successfully.`);
 
     // 6. Seed a sample RSVP relation to establish relational data
-    const sportsEvent = seededEvents.find(e => e.title === "Inter-House Sports Gala");
+    const sportsEvent = seededEvents.find(e => e.title === "Namal Sports Gala 2026");
     if (sportsEvent) {
       await RSVP.create({
         eventId: sportsEvent._id,
@@ -278,26 +328,42 @@ const seedDB = async () => {
     console.log('📰 Seeding news bulletins...');
     const newsData = [
       {
-        title: "Rumi House Newsletter: Spring Edition 2026",
+        title: "Namal University Mianwali Convocation, Class of 2023",
         category: "newsletter",
-        summary: "Our seasonal publication celebrating Rumi House academic achievements, sports gala triumphs, co-curricular awards, and student-council services.",
-        content: "We are extremely proud to launch the Spring Edition 2026 of the Rumi House Newsletter. This term has witnessed remarkable milestones for our house members. Our athletic teams performed exceptionally well in the regional sports championships, securing gold medals in cricket and table tennis. On the academic front, over fifteen Rumi members made it to the Dean's Honor List with high CGPAs.",
+        summary: "Celebrating the success, perseverance, and achievements of our graduates at the 11th Convocation Ceremony of Namal University.",
+        content: "Namal University held its landmark Convocation ceremony, awarding degrees to the graduating Class of 2023. Families, faculty, and distinguished guests gathered at the Mianwali campus to witness the crowning achievements of our talented scholars, engineers, and future business leaders.",
         publishedBy: adminUser._id,
         status: 'published'
       },
       {
-        title: "Sports Gala Special Bulletin",
+        title: "Step Into Excellence | Admissions 2026",
         category: "alert",
-        summary: "Official declaration regarding the schedule of matches, team registrations, house jerseys, and mandatory practice sessions for the upcoming Inter-House Sports Gala.",
-        content: "Attention all Rumi House residents! The team registrations for the upcoming Inter-House Sports Gala (E101) are officially open. All team captains are directed to submit their final player lists to the sports coordinator by June 3rd. Let's bring the championship trophy back to Rumi House!",
+        summary: "Namal University's undergraduate admissions are officially open. Apply online for BS Computer Science, BS Software Engineering, BS EE, and BBA programs.",
+        content: "Become part of Pakistan's premier rural development initiative and high-tech academic landscape. Admissions for Fall 2026 are now open. With over 90% of students receiving financial support or scholarships, Namal remains committed to bringing world-class education within reach.",
         publishedBy: adminUser._id,
         status: 'published'
       },
       {
-        title: "Social Impact Annual Outreach Review",
+        title: "A Step Towards Sustainability | Plantation Drive 2026",
         category: "visit",
-        summary: "An extensive review of the annual village uplift projects, school restoration efforts, and welfare drives successfully executed by Namalites this year.",
-        content: "Namalites have once again demonstrated their commitment to society. Under this initiative, our student teams visited three neighboring rural schools to establish mini science laboratories and library shelves, donating over 300 books.",
+        summary: "In collaboration with the Namal Environmental Club, Rumi House successfully planted 500 indigenous saplings in the Salt Range.",
+        content: "Demonstrating our core value of sustainability and community action, students, staff, and faculty coordinators took part in the Green Namal Campaign. The drive focused on planting native species around Namal Lake to preserve regional biodiversity and combat soil erosion.",
+        publishedBy: adminUser._id,
+        status: 'published'
+      },
+      {
+        title: "NUST NET (Series-4) Valid for Admission at Namal University",
+        category: "alert",
+        summary: "Great news for prospective engineering and computing students! Namal University will accept NUST NET Series-4 scores for undergraduate admissions.",
+        content: "To facilitate prospective students from across Pakistan, Namal University is pleased to announce that candidates with valid NUST NET Series-4 test scores can directly apply for admission into our BS CS, BS SE, and BS EE programs for Fall 2026. Submit your scores through the online admission portal before the deadline.",
+        publishedBy: adminUser._id,
+        status: 'published'
+      },
+      {
+        title: "Embracing the Spirit of Ramzan | Ehtram-e-Ramzan",
+        category: "newsletter",
+        summary: "Namal Society for Social Impact hosted a campus-wide Iftar for local community members and campus support staff.",
+        content: "In the true spirit of empathy and inclusivity, the Namal community gathered for a grand Iftar hosted by student volunteers. The event fostered dialogue, shared blessings, and recognized the contributions of our dedicated administrative and security staff.",
         publishedBy: adminUser._id,
         status: 'published'
       }

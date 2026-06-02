@@ -851,7 +851,7 @@ export default function ExecutiveDashboard() {
                     id="location" 
                     name="location"
                     type="text" 
-                    placeholder="e.g. Academic Auditorium A / CS Lab 3" 
+                    placeholder="e.g. Huawei Lab / Academic Block" 
                     className="w-full bg-surface border border-outline-variant rounded px-4 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                     value={formData.location} 
                     onChange={handleInputChange} 

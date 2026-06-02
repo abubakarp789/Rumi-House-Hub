@@ -6,19 +6,121 @@ import LoadingState from '../components/LoadingState';
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [liveSocietiesCount, setLiveSocietiesCount] = useState(6);
-  const [liveEventsCount, setLiveEventsCount] = useState(3);
+  const [liveSocietiesCount, setLiveSocietiesCount] = useState(15);
+  const [liveEventsCount, setLiveEventsCount] = useState(6);
+  const [societies, setSocieties] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [news, setNews] = useState([]);
+
+  // Fallbacks using authentic Namal University data
+  const fallbackSocieties = [
+    {
+      _id: 'featured',
+      name: "Namal Literary & Debating Society (LDS)",
+      description: "A forum for critical inquiry, debate, poetry recitations, and literary evenings at Namal, keeping academic discourse and creative expression active. Bringing student thought leaders into conversational circles through classical and contemporary literary works.",
+      memberCount: 110
+    },
+    {
+      _id: 'computing',
+      name: "Namal Computing Society (NCS)",
+      description: "Drives competitive coding championships, technical programming sprints, neural network workshops, and tech expos inside the Huawei Lab."
+    },
+    {
+      _id: 'media',
+      name: "Namal Media Club (VoN)",
+      description: "Captures and logs all university events, providing digital photography courses and editing newsletters."
+    },
+    {
+      _id: 'social',
+      name: "Namal Society for Social Impact (NSSI)",
+      description: "Champions community welfare, student financial support, blood donation drives, and educational initiatives."
+    },
+    {
+      _id: 'sports',
+      name: "Namal Sports & Adventure Club (NSAC)",
+      description: "Ensures students participate in physical drills, recreational games on and off campus, and Sports Gala campaigns."
+    }
+  ];
+
+  const fallbackEvents = [
+    {
+      _id: 'evt1',
+      title: "Namal Sports Gala 2026",
+      location: "Namal Sports Facility",
+      startDateTime: new Date("2026-06-15T09:00:00"),
+      description: "The premier athletic league of Namal University where house teams compete fiercely in athletics, cricket, football, and badminton near Namal Lake.",
+      status: "approved"
+    },
+    {
+      _id: 'evt2',
+      title: "Blood Donation Drive (Sundas Foundation)",
+      location: "Academic Block",
+      startDateTime: new Date("2026-06-08T10:00:00"),
+      description: "Namal Society for Social Impact in collaboration with Sundas Foundation is organizing a voluntary blood donation drive. Come forward and save a life!",
+      status: "approved"
+    },
+    {
+      _id: 'evt3',
+      title: "NCS LLM & Generative AI Workshop",
+      location: "Huawei Lab",
+      startDateTime: new Date("2026-06-05T14:30:00"),
+      description: "A comprehensive, hands-on workshop on Large Language Models, prompt engineering, and building agentic AI applications inside the Huawei Lab.",
+      status: "approved"
+    }
+  ];
+
+  const fallbackNews = [
+    {
+      _id: 'news1',
+      title: "Namal University Mianwali Convocation, Class of 2023",
+      category: "newsletter",
+      summary: "Celebrating the success, perseverance, and achievements of our graduates at the 11th Convocation Ceremony of Namal University.",
+      publishedAt: new Date("2024-02-18T10:00:00")
+    },
+    {
+      _id: 'news2',
+      title: "Step Into Excellence | Admissions 2026",
+      category: "alert",
+      summary: "Namal University's undergraduate admissions are officially open. Apply online for BS Computer Science, BS Software Engineering, BS EE, and BBA programs.",
+      publishedAt: new Date("2026-05-20T10:00:00")
+    },
+    {
+      _id: 'news3',
+      title: "A Step Towards Sustainability | Plantation Drive 2026",
+      category: "visit",
+      summary: "In collaboration with the Namal Environmental Club, Rumi House successfully planted 500 indigenous saplings in the Salt Range.",
+      publishedAt: new Date("2026-03-30T10:00:00")
+    },
+    {
+      _id: 'news4',
+      title: "NUST NET (Series-4) Valid for Admission at Namal University",
+      category: "alert",
+      summary: "Great news for prospective engineering and computing students! Namal University will accept NUST NET Series-4 scores for undergraduate admissions.",
+      publishedAt: new Date("2026-05-05T10:00:00")
+    }
+  ];
 
   useEffect(() => {
     async function loadDataSummary() {
       try {
         setLoading(true);
-        const [socs, evts] = await Promise.all([
+        const [socs, evts, nws] = await Promise.all([
           api.getSocieties(),
-          api.getEvents('approved')
+          api.getEvents('approved'),
+          api.getNews()
         ]);
-        setLiveSocietiesCount(socs.length || 6);
-        setLiveEventsCount(evts.length || 3);
+        
+        setSocieties(socs || []);
+        // Sort events by date ascending
+        const sortedEvts = (evts || []).sort((a, b) => new Date(a.startDateTime) - new Date(b.startDateTime));
+        setEvents(sortedEvts);
+        
+        // Sort news by publishedAt descending
+        const sortedNws = (nws || []).sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+        setNews(sortedNws);
+        
+        setLiveSocietiesCount(socs.length || 15);
+        setLiveEventsCount(evts.length || 6);
       } catch (err) {
         console.error('MERN API is offline, using static fallback mockup data.', err);
       } finally {
@@ -28,6 +130,45 @@ export default function Home() {
     loadDataSummary();
   }, []);
 
+  const formatDate = (dateString) => {
+    const d = new Date(dateString);
+    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    return {
+      monthDay: `${months[d.getMonth()]} ${d.getDate()}`,
+      year: d.getFullYear()
+    };
+  };
+
+  const formatTimeAgo = (dateString) => {
+    const diff = Date.now() - new Date(dateString).getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    if (days <= 0) return 'Today';
+    if (days === 1) return 'Yesterday';
+    return `${days} Days Ago`;
+  };
+
+  // Determine items to display
+  const displaySocieties = societies.length > 0 ? societies : fallbackSocieties;
+  
+  // Find specific societies for bento layout mapping
+  const featuredSoc = displaySocieties.find(s => s.name.includes("Literary") || s.name.includes("LDS")) || displaySocieties[0];
+  const computingSoc = displaySocieties.find(s => s.name.includes("Computing") || s.name.includes("NCS")) || displaySocieties[1];
+  const mediaSoc = displaySocieties.find(s => s.name.includes("Media") || s.name.includes("VoN") || s.name.includes("Arts")) || displaySocieties[2];
+  const socialSoc = displaySocieties.find(s => s.name.includes("Social") || s.name.includes("Impact") || s.name.includes("NSSI")) || displaySocieties[3];
+  const sportsSoc = displaySocieties.find(s => s.name.includes("Sports") || s.name.includes("NSAC")) || displaySocieties[4];
+
+  const getSocLink = (soc) => {
+    return soc && soc._id && soc._id !== 'featured' && soc._id !== 'computing' && soc._id !== 'media' && soc._id !== 'social' && soc._id !== 'sports'
+      ? `/societies/${soc._id}` 
+      : `/societies`;
+  };
+
+  const displayEvents = events.length > 0 ? events.slice(0, 3) : fallbackEvents;
+  const displayNews = news.length > 0 ? news : fallbackNews;
+  
+  const featuredArticle = displayNews[0] || fallbackNews[0];
+  const sidebarArticles = displayNews.slice(1, 4).length > 0 ? displayNews.slice(1, 4) : fallbackNews.slice(1, 4);
+
   return (
     <div className="font-body-md text-on-background antialiased pt-4">
       {/* Hero Section: Asymmetric Composition */}
@@ -36,10 +177,10 @@ export default function Home() {
           <div className="col-span-12 lg:col-span-7 flex flex-col justify-center animate-fade-in-up">
             <p className="font-label-uppercase text-label-uppercase text-secondary mb-6 tracking-[0.2em] font-semibold">Institutional Engagement</p>
             <h1 className="font-display-lg text-display-lg-mobile lg:text-display-lg text-primary mb-8 leading-tight">
-              Rumi House Hub: Your Gateway to Campus Engagement at Namal University.
+              Rumi House Hub: Namal's Central Societies Headquarters
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-xl">
-              A centralized digital landscape designed to foster collaboration, scholarship, and community spirit across our historic campus grounds.
+              Serving as the official coordination office and creative community hub for all Namal student societies, clubs, and co-curricular programs overlooking Namal Lake.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link 
@@ -61,7 +202,7 @@ export default function Home() {
               <div className="aspect-[4/5] bg-surface border border-outline-variant p-4 relative z-10 overflow-hidden shadow-tight transition-all duration-500 group-hover:border-primary group-hover:shadow-lg">
                 <img 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" 
-                  alt="Namal Gothic Library Mockup"
+                  alt="Namal Twilight Campus View"
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIZqc0pne6wie6DCyogV3kdRfx7h15pWkYJ6FuAE4MLMfsuBpfaMSazIHIhvNqc6qYWJRVxCFbv3YJw4SjyK6WxFODC0DfLAvSyIcYDp5hh-rnd4nBzHPr6f9MmQUcK3KO-63_boHIavGXGNkD_YDvfgu0vdoy8rXoQ0BwmUGdjcWVi_fcnG0hhRDQR19H-XGvZs0pRx6bhBsMe5A_LxXujXgn0rheSSiRHMb11XOk9c58tYG0xev2ZuGaZK4HVfFLpmn5qYX_vGg_"
                 />
                 {/* Glassmorphic border pill overlap */}
@@ -75,7 +216,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
 
       <div className="max-w-container-max mx-auto px-margin-desktop py-8">
         <div className="editorial-line"></div>
@@ -100,7 +240,7 @@ export default function Home() {
         
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 animate-fade-in-up animate-delay-200">
           {/* Large Card */}
-          <div className="md:col-span-2 md:row-span-2 bg-gradient-to-br from-white to-surface-warm/30 border border-outline-variant p-8 flex flex-col group cursor-pointer bento-card-premium rounded-lg relative overflow-hidden">
+          <Link to={getSocLink(featuredSoc)} className="md:col-span-2 md:row-span-2 bg-gradient-to-br from-white to-surface-warm/30 border border-outline-variant p-8 flex flex-col group cursor-pointer bento-card-premium rounded-lg relative overflow-hidden block">
             {/* Decorative Gold Editorial Accent */}
             <div className="absolute top-0 right-0 w-16 h-16 pointer-events-none">
               <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-gold/30 transition-all duration-300 group-hover:border-gold group-hover:scale-110"></div>
@@ -108,10 +248,10 @@ export default function Home() {
             
             <span className="font-label-uppercase text-label-uppercase text-secondary mb-4 tracking-wider font-semibold">Literary Pillar</span>
             <h3 className="font-headline-sm text-headline-sm text-primary mb-6 transition-colors group-hover:text-primary-container">
-              Rumi Literary Society
+              {featuredSoc.name}
             </h3>
             <p className="text-on-surface-variant font-body-md mb-8 flex-grow leading-relaxed">
-              A forum for critical inquiry, debate, poetry recitations, and literary evenings at Namal, keeping academic discourse and creative expression active. Bringing student thought leaders into conversational circles through classical and contemporary literary works.
+              {featuredSoc.description}
             </p>
             <div className="flex items-center gap-4 border-t border-outline-variant/60 pt-6">
               <div className="flex -space-x-2">
@@ -119,36 +259,36 @@ export default function Home() {
                 <div className="w-8 h-8 rounded-full border-2 border-white bg-[#abf3bb] flex items-center justify-center text-[9px] font-bold text-on-tertiary-fixed transition-transform duration-300 hover:scale-110 hover:z-20 cursor-default shadow-sm hover:shadow-md">AB</div>
                 <div className="w-8 h-8 rounded-full border-2 border-white bg-[#dbe2f8] flex items-center justify-center text-[9px] font-bold text-on-surface-variant transition-transform duration-300 hover:scale-110 hover:z-20 cursor-default shadow-sm hover:shadow-md">FK</div>
               </div>
-              <span className="text-body-sm text-on-surface-variant font-medium">124 Members</span>
+              <span className="text-body-sm text-on-surface-variant font-medium">{featuredSoc.memberCount || 110} Members</span>
             </div>
-          </div>
+          </Link>
 
           {/* Regular Card 1 */}
-          <Link to="/societies" className="bg-white border border-outline-variant p-6 bento-card-premium block rounded-lg shadow-tight group">
+          <Link to={getSocLink(computingSoc)} className="bg-white border border-outline-variant p-6 bento-card-premium block rounded-lg shadow-tight group">
             <span className="material-symbols-outlined text-primary mb-4 text-3xl icon-hover-rotate inline-block">terminal</span>
-            <h4 className="font-headline-sm text-headline-sm text-primary text-lg mb-2 transition-colors group-hover:text-primary-container">Namal Computing Society</h4>
-            <p className="text-on-surface-variant text-body-sm leading-relaxed">Innovating through coding competitions, hackathons, and hardware design workshops.</p>
+            <h4 className="font-headline-sm text-headline-sm text-primary text-lg mb-2 transition-colors group-hover:text-primary-container">{computingSoc.name}</h4>
+            <p className="text-on-surface-variant text-body-sm leading-relaxed">{computingSoc.description.slice(0, 95)}...</p>
           </Link>
 
           {/* Regular Card 2 */}
-          <Link to="/societies" className="bg-white border border-outline-variant p-6 bento-card-premium block rounded-lg shadow-tight group">
+          <Link to={getSocLink(mediaSoc)} className="bg-white border border-outline-variant p-6 bento-card-premium block rounded-lg shadow-tight group">
             <span className="material-symbols-outlined text-primary mb-4 text-3xl icon-hover-rotate inline-block">brush</span>
-            <h4 className="font-headline-sm text-headline-sm text-primary text-lg mb-2 transition-colors group-hover:text-primary-container">Namal Arts & Media Society</h4>
-            <p className="text-on-surface-variant text-body-sm leading-relaxed">Capturing the aesthetic essence of campus life through traditional decor and digital media.</p>
+            <h4 className="font-headline-sm text-headline-sm text-primary text-lg mb-2 transition-colors group-hover:text-primary-container">{mediaSoc.name}</h4>
+            <p className="text-on-surface-variant text-body-sm leading-relaxed">{mediaSoc.description.slice(0, 95)}...</p>
           </Link>
 
           {/* Regular Card 3 */}
-          <Link to="/societies" className="bg-white border border-outline-variant p-6 bento-card-premium block rounded-lg shadow-tight group">
+          <Link to={getSocLink(socialSoc)} className="bg-white border border-outline-variant p-6 bento-card-premium block rounded-lg shadow-tight group">
             <span className="material-symbols-outlined text-primary mb-4 text-3xl icon-hover-rotate inline-block">eco</span>
-            <h4 className="font-headline-sm text-headline-sm text-primary text-lg mb-2 transition-colors group-hover:text-primary-container">Social Welfare Society</h4>
-            <p className="text-on-surface-variant text-body-sm leading-relaxed">Pioneering sustainable outreach, blood drives, and charity drives across the university.</p>
+            <h4 className="font-headline-sm text-headline-sm text-primary text-lg mb-2 transition-colors group-hover:text-primary-container">{socialSoc.name}</h4>
+            <p className="text-on-surface-variant text-body-sm leading-relaxed">{socialSoc.description.slice(0, 95)}...</p>
           </Link>
 
           {/* Regular Card 4 */}
-          <Link to="/societies" className="bg-white border border-outline-variant p-6 bento-card-premium block rounded-lg shadow-tight group">
+          <Link to={getSocLink(sportsSoc)} className="bg-white border border-outline-variant p-6 bento-card-premium block rounded-lg shadow-tight group">
             <span className="material-symbols-outlined text-primary mb-4 text-3xl icon-hover-rotate inline-block">sports_cricket</span>
-            <h4 className="font-headline-sm text-headline-sm text-primary text-lg mb-2 transition-colors group-hover:text-primary-container">Namal Sports Society</h4>
-            <p className="text-on-surface-variant text-body-sm leading-relaxed">Competitive excellence, physical wellness, and athletic sportsmanship in the heart of Namal.</p>
+            <h4 className="font-headline-sm text-headline-sm text-primary text-lg mb-2 transition-colors group-hover:text-primary-container">{sportsSoc.name}</h4>
+            <p className="text-on-surface-variant text-body-sm leading-relaxed">{sportsSoc.description.slice(0, 95)}...</p>
           </Link>
         </div>
       </section>
@@ -180,53 +320,37 @@ export default function Home() {
                   <div className="col-span-3 text-right">Status</div>
                 </div>
 
-                {/* Row 1 */}
-                <Link to="/events" className="grid grid-cols-12 p-6 border-b border-outline-variant hover:bg-surface-container-lowest transition-colors items-center group event-row-premium">
-                  <div className="col-span-3 md:col-span-2 transition-transform group-hover:translate-x-1.5 duration-300">
-                    <span className="block font-bold text-primary">OCT 14</span>
-                    <span className="text-xs text-on-surface-variant font-medium">2026</span>
-                  </div>
-                  <div className="col-span-6 md:col-span-7 transition-transform group-hover:translate-x-1.5 duration-300">
-                    <h5 className="font-bold text-primary text-body-lg group-hover:text-primary-container transition-colors">AI & Web Development Workshop</h5>
-                    <p className="text-on-surface-variant text-body-sm mt-1">Hands-on technical workshop hosted by Namal Computing Society in CS Lab 3.</p>
-                  </div>
-                  <div className="col-span-3 text-right flex items-center justify-end gap-2 transition-transform group-hover:-translate-x-1 duration-300">
-                    <span className="px-3 py-1 bg-tertiary/10 text-tertiary text-[10px] font-bold rounded-full border border-tertiary/20 uppercase tracking-wider shadow-sm">RSVP Open</span>
-                    <span className="material-symbols-outlined text-sm text-tertiary opacity-0 group-hover:opacity-100 transition-opacity duration-300">chevron_right</span>
-                  </div>
-                </Link>
+                {displayEvents.map((evt) => {
+                  const { monthDay, year } = formatDate(evt.startDateTime);
+                  const eventLink = evt._id && !evt._id.startsWith('evt') ? `/events/${evt._id}` : `/events`;
+                  const isPast = new Date(evt.startDateTime) < new Date();
+                  const rsvpText = isPast ? 'Past Event' : 'RSVP Open';
+                  const badgeColor = isPast 
+                    ? 'bg-on-surface-variant/10 text-on-surface-variant border-on-surface-variant/20' 
+                    : evt.type === 'sports' 
+                      ? 'bg-secondary/10 text-secondary border-secondary/20'
+                      : 'bg-tertiary/10 text-tertiary border-tertiary/20';
 
-                {/* Row 2 */}
-                <Link to="/events" className="grid grid-cols-12 p-6 border-b border-outline-variant hover:bg-surface-container-lowest transition-colors items-center group event-row-premium">
-                  <div className="col-span-3 md:col-span-2 transition-transform group-hover:translate-x-1.5 duration-300">
-                    <span className="block font-bold text-primary">OCT 18</span>
-                    <span className="text-xs text-on-surface-variant font-medium">2026</span>
-                  </div>
-                  <div className="col-span-6 md:col-span-7 transition-transform group-hover:translate-x-1.5 duration-300">
-                    <h5 className="font-bold text-primary text-body-lg group-hover:text-primary-container transition-colors">Inter-Society Coding Competition</h5>
-                    <p className="text-on-surface-variant text-body-sm mt-1">Algorithmic speed challenge hosted by Namal Computing Society in the Central Hall.</p>
-                  </div>
-                  <div className="col-span-3 text-right flex items-center justify-end gap-2 transition-transform group-hover:-translate-x-1 duration-300">
-                    <span className="px-3 py-1 bg-secondary/10 text-secondary text-[10px] font-bold rounded-full border border-secondary/20 uppercase tracking-wider shadow-sm">Limited Capacity</span>
-                    <span className="material-symbols-outlined text-sm text-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300">chevron_right</span>
-                  </div>
-                </Link>
-
-                {/* Row 3 */}
-                <Link to="/events" className="grid grid-cols-12 p-6 hover:bg-surface-container-lowest transition-colors items-center group event-row-premium event-row-premium-gold">
-                  <div className="col-span-3 md:col-span-2 transition-transform group-hover:translate-x-1.5 duration-300">
-                    <span className="block font-bold text-primary">OCT 22</span>
-                    <span className="text-xs text-on-surface-variant font-medium">2026</span>
-                  </div>
-                  <div className="col-span-6 md:col-span-7 transition-transform group-hover:translate-x-1.5 duration-300">
-                    <h5 className="font-bold text-primary text-body-lg group-hover:text-primary-container transition-colors">Rumi Literary Evening</h5>
-                    <p className="text-on-surface-variant text-body-sm mt-1">Annual poetry declamation and classical ghazal evening in the main auditorium.</p>
-                  </div>
-                  <div className="col-span-3 text-right flex items-center justify-end gap-2 transition-transform group-hover:-translate-x-1 duration-300">
-                    <span className="px-3 py-1 bg-on-surface-variant/10 text-on-surface-variant text-[10px] font-bold rounded-full border border-on-surface-variant/20 uppercase tracking-wider shadow-sm">Members Only</span>
-                    <span className="material-symbols-outlined text-sm text-on-surface-variant opacity-0 group-hover:opacity-100 transition-opacity duration-300">chevron_right</span>
-                  </div>
-                </Link>
+                  return (
+                    <Link key={evt._id} to={eventLink} className="grid grid-cols-12 p-6 border-b border-outline-variant hover:bg-surface-container-lowest transition-colors items-center group event-row-premium">
+                      <div className="col-span-3 md:col-span-2 transition-transform group-hover:translate-x-1.5 duration-300">
+                        <span className="block font-bold text-primary">{monthDay}</span>
+                        <span className="text-xs text-on-surface-variant font-medium">{year}</span>
+                      </div>
+                      <div className="col-span-6 md:col-span-7 transition-transform group-hover:translate-x-1.5 duration-300">
+                        <h5 className="font-bold text-primary text-body-lg group-hover:text-primary-container transition-colors">{evt.title}</h5>
+                        <p className="text-on-surface-variant text-body-sm mt-1">{evt.description}</p>
+                        <div className="text-[10px] text-primary/70 font-semibold uppercase tracking-wider mt-1.5 flex items-center gap-1.5">
+                          <span className="material-symbols-outlined text-xs">location_on</span> {evt.location}
+                        </div>
+                      </div>
+                      <div className="col-span-3 text-right flex items-center justify-end gap-2 transition-transform group-hover:-translate-x-1 duration-300">
+                        <span className={`px-3 py-1 text-[10px] font-bold rounded-full border uppercase tracking-wider shadow-sm ${badgeColor}`}>{rsvpText}</span>
+                        <span className="material-symbols-outlined text-sm text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300">chevron_right</span>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -242,17 +366,19 @@ export default function Home() {
             <div className="h-64 md:h-auto overflow-hidden">
               <img 
                 className="w-full h-full object-cover news-image-zoom" 
-                alt="Namal Twilight Campus View Mockup"
+                alt="Namal Twilight Campus View"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5TAJP-TNMW6xQV-A4k9730zX2t288n0gTzgY0M30OtFfazFQcFF4mSI1iwE9LDY-UrkYfCjKsssOWYsZpz7Aac9WM02gf1UiumgfYyIMO4GVpAcdXjpDbSmH1WZwNR9LPzBWvAODBH9Z03yfuTNt6eRb01sLxgYeB8jbMd9_YLgQHCZQDENGUMG0Eui-Nv1mSMPgwbHaqN-WJAq5MPhVYAj3lhBTYREnpfzuxPUf_soX_m7iNwxFa9ksoDqrILgkFW7qOOceGDdYp"
               />
             </div>
             <div className="p-8 flex flex-col justify-center bg-gradient-to-br from-white to-surface-warm/20">
               <span className="font-label-uppercase text-label-uppercase text-secondary mb-4 tracking-wider font-semibold">Strategic Vision</span>
-              <h3 className="font-headline-sm text-headline-sm text-primary mb-6 transition-colors group-hover:text-primary-container">Namal 2030: The Digital Transformation Roadmap</h3>
+              <h3 className="font-headline-sm text-headline-sm text-primary mb-6 transition-colors group-hover:text-primary-container">
+                {featuredArticle.title}
+              </h3>
               <p className="text-on-surface-variant font-body-md mb-6 leading-relaxed">
-                The Board of Governors has officially unveiled the infrastructure plan to integrate advanced AI labs into the Rumi House research wing.
+                {featuredArticle.summary}
               </p>
-              <Link to="/news" className="text-primary font-bold hover:text-primary-container flex items-center gap-1 group/link transition-colors">
+              <Link to={featuredArticle._id && !featuredArticle._id.startsWith('news') ? `/news/${featuredArticle._id}` : `/news`} className="text-primary font-bold hover:text-primary-container flex items-center gap-1 group/link transition-colors">
                 Read the full report <span className="material-symbols-outlined text-sm transition-transform group-hover/link:translate-x-1">arrow_forward</span>
               </Link>
             </div>
@@ -260,21 +386,18 @@ export default function Home() {
           
           {/* Sidebar News */}
           <div className="col-span-12 lg:col-span-4 flex flex-col gap-6 animate-fade-in-up animate-delay-200">
-            <article className="p-6 bg-white border border-outline-variant border-l-4 border-l-primary rounded-lg shadow-tight group cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
-              <span className="text-xs font-bold text-on-surface-variant opacity-60 uppercase mb-2 block tracking-wider">2 Hours Ago</span>
-              <h4 className="font-bold text-primary mb-2 transition-colors group-hover:text-primary-container">Society Elections: Phase 1 Results Announced</h4>
-              <p className="text-body-sm text-on-surface-variant line-clamp-2 leading-relaxed">The Electoral Commission has verified the votes for the following society leadership positions...</p>
-            </article>
-            <article className="p-6 bg-white border border-outline-variant border-l-4 border-l-secondary rounded-lg shadow-tight group cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
-              <span className="text-xs font-bold text-on-surface-variant opacity-60 uppercase mb-2 block tracking-wider">Yesterday</span>
-              <h4 className="font-bold text-primary mb-2 transition-colors group-hover:text-primary-container">Campus Maintenance: East Wing Access</h4>
-              <p className="text-body-sm text-on-surface-variant line-clamp-2 leading-relaxed">Scheduled maintenance for the high-performance computing cluster will begin on Monday...</p>
-            </article>
-            <article className="p-6 bg-white border border-outline-variant border-l-4 border-l-primary rounded-lg shadow-tight group cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all duration-300">
-              <span className="text-xs font-bold text-on-surface-variant opacity-60 uppercase mb-2 block tracking-wider">2 Days Ago</span>
-              <h4 className="font-bold text-primary mb-2 transition-colors group-hover:text-primary-container">Faculty Spotlight: Dr. Sarah Khan</h4>
-              <p className="text-body-sm text-on-surface-variant line-clamp-2 leading-relaxed">Exploring the recent breakthrough in sustainable water filtration systems published in Nature.</p>
-            </article>
+            {sidebarArticles.map((art) => {
+              const artLink = art._id && !art._id.startsWith('news') ? `/news/${art._id}` : `/news`;
+              return (
+                <Link key={art._id} to={artLink} className="p-6 bg-white border border-outline-variant border-l-4 border-l-primary rounded-lg shadow-tight group cursor-pointer hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 block">
+                  <span className="text-xs font-bold text-on-surface-variant opacity-60 uppercase mb-2 block tracking-wider">
+                    {formatTimeAgo(art.publishedAt)}
+                  </span>
+                  <h4 className="font-bold text-primary mb-2 transition-colors group-hover:text-primary-container">{art.title}</h4>
+                  <p className="text-body-sm text-on-surface-variant line-clamp-2 leading-relaxed">{art.summary}</p>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
