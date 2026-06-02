@@ -18,8 +18,8 @@ export default function Navbar() {
   const linkClass = ({ isActive }) => 
     `font-label-uppercase text-label-uppercase pb-1 transition-colors ${
       isActive 
-        ? 'text-primary border-b-2 border-primary' 
-        : 'text-on-surface-variant hover:text-primary'
+        ? 'text-primary border-b-2 border-primary font-semibold' 
+        : 'text-on-surface-variant hover:text-primary nav-link-underline-premium'
     }`;
 
   const mobileLinkClass = ({ isActive }) =>
@@ -77,7 +77,7 @@ export default function Navbar() {
   );
 
   return (
-    <header className="bg-surface border-b border-outline-variant fixed top-0 w-full z-50 h-20 flex items-center">
+    <header className="fixed top-0 w-full z-50 h-20 flex items-center border-b border-outline-variant/60 nav-glass-premium shadow-tight/40">
       <a className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-white focus:text-primary z-50" href="#main-content">
         Skip to main content
       </a>

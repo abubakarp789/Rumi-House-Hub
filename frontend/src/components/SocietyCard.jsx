@@ -28,41 +28,41 @@ export default function SocietyCard({ society }) {
   const badgeClass = CATEGORY_BADGES[catLower] || CATEGORY_BADGES.default;
 
   return (
-    <article className="bg-surface-container-lowest border border-outline-variant overflow-hidden group hover:border-primary transition-all duration-300 flex flex-col justify-between h-full">
+    <article className="bg-white border border-outline-variant/60 overflow-hidden bento-card-premium flex flex-col justify-between h-full rounded-lg shadow-tight group">
       <div>
         <div className="h-48 overflow-hidden relative">
           <img 
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" 
             src={cardImage} 
             alt={`${name}`} 
           />
-          <div className="absolute top-4 left-4">
-            <span className={`${badgeClass} px-3 py-1 font-label-uppercase text-[10px] tracking-widest rounded-sm uppercase`}>
+          <div className="absolute top-4 left-4 shadow-sm">
+            <span className={`${badgeClass} px-3 py-1 font-label-uppercase text-[9px] tracking-widest rounded-sm uppercase font-bold`}>
               {category || 'General'}
             </span>
           </div>
         </div>
         
-        <div className="p-6 pb-0">
-          <h3 className="font-headline-sm text-headline-sm text-primary mb-2">
+        <div className="p-6 pb-0 text-left">
+          <h3 className="font-headline-sm text-headline-sm text-primary mb-2 transition-colors group-hover:text-primary-container">
             {name}
           </h3>
-          <p className="font-body-sm text-on-surface-variant line-clamp-3">
+          <p className="font-body-sm text-on-surface-variant line-clamp-3 leading-relaxed">
             {description}
           </p>
         </div>
       </div>
 
-      <div className="p-6 pt-0">
-        <div className="grid grid-cols-2 gap-4 mb-6 border-y border-outline-variant py-4 mt-4">
+      <div className="p-6 pt-0 text-left">
+        <div className="grid grid-cols-2 gap-4 mb-6 border-y border-outline-variant/60 py-4 mt-4">
           <div>
-            <p className="font-label-uppercase text-[10px] text-on-surface-variant mb-1">Faculty Patron</p>
+            <p className="font-label-uppercase text-[9px] text-on-surface-variant mb-1 font-semibold tracking-wider">Faculty Patron</p>
             <p className="font-body-sm font-semibold text-on-surface truncate">
               {patron || coordinator || 'Faculty Patron'}
             </p>
           </div>
           <div className="text-right">
-            <p className="font-label-uppercase text-[10px] text-on-surface-variant mb-1">MEMBERS</p>
+            <p className="font-label-uppercase text-[9px] text-on-surface-variant mb-1 font-semibold tracking-wider">MEMBERS</p>
             <p className="font-body-sm font-semibold text-on-surface">
               {memberCount || 0} Active
             </p>
@@ -71,9 +71,9 @@ export default function SocietyCard({ society }) {
 
         <Link 
           to={`/societies/${targetId}`} 
-          className="w-full py-3 border border-outline text-primary font-label-uppercase text-label-uppercase hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-2"
+          className="w-full py-3 border border-outline text-primary font-label-uppercase text-label-uppercase hover:bg-primary hover:text-white hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2 font-semibold shadow-tight rounded"
         >
-          View Details <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+          View Details <span className="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
         </Link>
       </div>
     </article>

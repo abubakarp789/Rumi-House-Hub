@@ -45,24 +45,24 @@ export default function Societies() {
   return (
     <div className="p-margin-desktop max-w-container-max mx-auto w-full pt-10">
       {/* Hero Header Section */}
-      <section className="mb-12 flex flex-col md:flex-row justify-between items-end gap-gutter">
+      <section className="mb-12 flex flex-col md:flex-row justify-between items-end gap-gutter animate-fade-in-up">
         <div className="max-w-2xl">
-          <span className="font-label-uppercase text-label-uppercase text-secondary mb-4 block tracking-[0.2em]">NAMAL COMMUNITY</span>
+          <span className="font-label-uppercase text-label-uppercase text-secondary mb-4 block tracking-[0.2em] font-semibold">NAMAL COMMUNITY</span>
           <h1 className="font-display-lg text-display-lg text-primary mb-6">Explore Our Intellectual &amp; Creative Hubs</h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-lg">
             Join a society to collaborate with like-minded peers, lead impactful initiatives, and shape the cultural fabric of Namal University.
           </p>
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 w-full md:w-auto">
           <Link 
             to="/events" 
-            className="px-6 py-3 border-2 border-primary text-primary font-label-uppercase text-label-uppercase hover:bg-primary hover:text-white transition-all text-center"
+            className="px-6 py-3 border-2 border-primary text-primary font-label-uppercase text-label-uppercase hover:bg-primary hover:text-white hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all text-center shadow-tight flex-1 md:flex-none"
           >
             Registration Open
           </Link>
           <Link 
             to="/dashboard" 
-            className="px-6 py-3 bg-primary text-white font-label-uppercase text-label-uppercase hover:bg-primary-container transition-all text-center"
+            className="px-6 py-3 bg-primary text-white font-label-uppercase text-label-uppercase hover:bg-primary-container hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all text-center shadow-tight flex-1 md:flex-none"
           >
             My Societies
           </Link>
@@ -70,7 +70,7 @@ export default function Societies() {
       </section>
 
       {/* Search & Filters Bar */}
-      <div className="flex flex-wrap items-center gap-6 mb-8 pb-6 border-b border-outline-variant">
+      <div className="flex flex-wrap items-center gap-6 mb-8 pb-6 border-b border-outline-variant/60 animate-fade-in-up animate-delay-100">
         {/* Category Filter Capsules */}
         <div className="flex flex-wrap gap-2" aria-label="Filter by Category">
           {CATEGORIES.map((cat) => {
@@ -80,10 +80,10 @@ export default function Societies() {
                 key={cat}
                 type="button"
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-6 py-2 font-label-uppercase text-label-uppercase rounded-full transition-colors ${
+                className={`px-6 py-2 font-label-uppercase text-label-uppercase rounded-full transition-all duration-300 shadow-tight hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 ${
                   isSelected 
-                    ? 'bg-primary text-white border border-primary' 
-                    : 'border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary'
+                    ? 'bg-primary text-white border border-primary font-semibold shadow-md' 
+                    : 'border border-outline-variant text-on-surface-variant bg-white hover:border-primary hover:text-primary'
                 }`}
               >
                 {cat === 'All' ? 'All Hubs' : cat}
@@ -98,7 +98,7 @@ export default function Societies() {
           <input
             type="text"
             placeholder="Search societies..."
-            className="pl-10 pr-4 py-2 border border-outline-variant rounded-full bg-surface-container-low focus:ring-1 focus:ring-primary focus:border-primary w-full md:w-64 text-body-sm outline-none transition-all"
+            className="pl-10 pr-4 py-2 border border-outline-variant rounded-full bg-white focus:ring-1 focus:ring-primary focus:border-primary w-full md:w-64 text-body-sm outline-none transition-all shadow-tight hover:shadow-md focus:shadow-md"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             aria-label="Search Societies"
@@ -131,10 +131,10 @@ export default function Societies() {
       )}
 
       {/* Discover More Footer Section */}
-      <div className="mt-16 flex justify-center">
+      <div className="mt-16 flex justify-center animate-fade-in-up animate-delay-300">
         <button 
           onClick={handleClearFilters}
-          className="flex items-center gap-3 px-12 py-4 border-2 border-outline-variant text-on-surface-variant font-label-uppercase text-label-uppercase hover:border-primary hover:text-primary transition-all group"
+          className="flex items-center gap-3 px-12 py-4 border-2 border-outline-variant text-on-surface-variant bg-white font-label-uppercase text-label-uppercase hover:border-primary hover:text-primary hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all group rounded-lg"
         >
           Reset Filters &amp; View All
           <span className="material-symbols-outlined transition-transform group-hover:translate-y-1">expand_more</span>

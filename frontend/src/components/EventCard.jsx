@@ -44,33 +44,38 @@ export default function EventCard({ event }) {
   const filledPercent = Math.min(100, Math.round((takenSeats / totalSeats) * 100));
 
   return (
-    <article className="bg-surface-container-lowest border border-outline-variant p-0 flex flex-col group hover:border-primary transition-all duration-300 shadow-sm justify-between h-full">
+    <article className="bg-white border border-outline-variant/60 p-0 flex flex-col bento-card-premium shadow-tight justify-between h-full rounded-lg group">
       <div>
         <div className="relative h-48 overflow-hidden">
           <img 
             alt={title} 
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700" 
             src={cardImage}
           />
-          <div className="absolute top-4 left-4 bg-white px-3 py-1 border editorial-shadow">
-            <span className={`font-label-uppercase text-label-uppercase text-xs font-bold uppercase ${badgeColor}`}>
+          <div className="absolute top-4 left-4 bg-white px-3 py-1.5 border border-outline-variant/60 shadow-sm rounded-sm">
+            <span className={`font-label-uppercase text-label-uppercase text-[9px] font-bold uppercase tracking-wider ${badgeColor}`}>
               {type || 'General'}
             </span>
           </div>
         </div>
 
-        <div className="p-6 pb-0">
-          <div className="flex justify-between items-start mb-3">
-            <div className="flex flex-col">
-              <span className="font-display-lg text-[40px] text-primary leading-none font-bold">
+        <div className="p-6 pb-0 text-left">
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex items-center gap-3">
+              <span className="font-display-lg text-[38px] text-primary leading-none font-bold">
                 {dayStr}
               </span>
-              <span className="font-label-uppercase text-label-uppercase text-on-surface-variant font-semibold">
-                {monthStr}, {yearStr}
-              </span>
+              <div className="flex flex-col">
+                <span className="font-label-uppercase text-label-uppercase text-[10px] text-on-surface-variant font-bold tracking-wider leading-none">
+                  {monthStr}
+                </span>
+                <span className="font-body-sm text-[12px] text-on-surface-variant font-semibold mt-0.5 leading-none">
+                  {yearStr}
+                </span>
+              </div>
             </div>
-            <div className="bg-tertiary-container px-3 py-1 rounded-sm">
-              <span className="font-label-uppercase text-label-uppercase text-on-tertiary-container text-[10px] uppercase font-bold">
+            <div className="bg-tertiary/10 border border-tertiary/20 px-3 py-1 rounded-full">
+              <span className="font-label-uppercase text-label-uppercase text-tertiary text-[9px] uppercase font-bold tracking-wide">
                 {status || 'Upcoming'}
               </span>
             </div>
@@ -96,22 +101,23 @@ export default function EventCard({ event }) {
         </div>
       </div>
 
-      <div className="p-6 pt-0">
+      <div className="p-6 pt-0 text-left">
         <div className="flex flex-col gap-2 mt-6">
-          <div className="flex justify-between font-label-uppercase text-[10px] text-on-surface-variant">
+          <div className="flex justify-between font-label-uppercase text-[9px] text-on-surface-variant font-semibold tracking-wider">
             <span>Seats Reserved</span>
             <span>{takenSeats}/{totalSeats} Seats</span>
           </div>
-          <div className="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
-            <div className="h-full bg-primary" style={{ width: `${filledPercent}%` }}></div>
+          <div className="w-full h-1.5 bg-surface-container rounded-full overflow-hidden border border-outline-variant/30">
+            <div className="h-full bg-gradient-to-r from-primary to-secondary" style={{ width: `${filledPercent}%` }}></div>
           </div>
         </div>
 
         <Link 
           to={`/events/${targetId}`} 
-          className="mt-6 w-full py-3 bg-primary text-on-primary font-bold hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center justify-center gap-2"
+          className="mt-6 w-full py-3 bg-primary text-white font-semibold hover:bg-primary-container hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2 rounded shadow-tight"
         >
           <span className="font-label-uppercase text-label-uppercase">DETAILS & RSVP</span>
+          <span className="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
         </Link>
       </div>
     </article>

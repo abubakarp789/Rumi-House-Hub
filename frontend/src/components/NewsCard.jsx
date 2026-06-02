@@ -16,12 +16,12 @@ export default function NewsCard({ newsItem, onReadMore }) {
 
   return (
     <article 
-      className="bg-surface-container-lowest border border-outline-variant p-6 flex flex-col justify-between group hover:border-primary transition-all duration-300 h-full text-left" 
+      className="bg-white border border-outline-variant/60 p-6 flex flex-col justify-between bento-card-premium rounded-lg shadow-tight group h-full text-left" 
       id={`news-card-${targetId}`}
     >
       <div>
         <div className="flex justify-between items-center mb-4">
-          <span className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 font-label-uppercase text-[9px] tracking-widest rounded-sm uppercase font-bold">
+          <span className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 font-label-uppercase text-[9px] tracking-widest rounded-sm uppercase font-bold shadow-sm">
             {category || 'General'}
           </span>
           <span className="text-[10px] font-bold text-on-surface-variant opacity-60 font-mono">
@@ -42,7 +42,7 @@ export default function NewsCard({ newsItem, onReadMore }) {
           By {authorName}
         </span>
         <button 
-          className="border border-outline text-primary px-4 py-2 hover:bg-primary hover:text-white transition-all text-xs font-label-uppercase text-label-uppercase font-bold cursor-pointer" 
+          className="border border-outline text-primary px-4 py-2 hover:bg-primary hover:text-white hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all text-xs font-label-uppercase text-label-uppercase font-bold cursor-pointer rounded shadow-tight" 
           onClick={onReadMore}
         >
           Read Article
