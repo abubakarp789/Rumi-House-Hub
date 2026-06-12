@@ -1,6 +1,11 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+const authenticate = async (token) => {
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  return User.findById(decoded.id).select('-passwordHash');
+};
+
 const protect = async (req, res, next) => {
   let token;
 
@@ -10,10 +15,7 @@ const protect = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
 
       // Verify the signed token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      // Fetch the user object and attach it to req.user (excluding passwordHash)
-      req.user = await User.findById(decoded.id).select('-passwordHash');
+      req.user = await authenticate(token);
 
       if (!req.user) {
         return res.status(401).json({
@@ -38,4 +40,24 @@ const protect = async (req, res, next) => {
   });
 };
 
-module.exports = { protect };
+const optionalProtect = async (req, res, next) => {
+  if (!req.headers.authorization?.startsWith('Bearer ')) {
+    return next();
+  }
+
+  try {
+    const token = req.headers.authorization.split(' ')[1];
+    req.user = await authenticate(token);
+    if (!req.user) {
+      return res.status(401).json({ error: 'Unauthorized', message: 'The token user no longer exists.' });
+    }
+    return next();
+  } catch (error) {
+    return res.status(401).json({
+      error: 'Unauthorized',
+      message: 'Your authorization token is invalid or has expired.'
+    });
+  }
+};
+
+module.exports = { optionalProtect, protect };

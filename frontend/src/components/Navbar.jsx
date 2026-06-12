@@ -1,48 +1,108 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import crestImage from '../assets/landing/rumi-house-hub-crest-display.png';
 import { AuthContext } from '../context/AuthContext';
 
 export default function Navbar() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const closeMobile = () => setMobileOpen(false);
+
+  // Close drawer on route change
+  useEffect(() => {
+    closeMobile();
+  }, [location.pathname, location.search]);
+
+  // Focus trap & Escape listener for mobile drawer
   useEffect(() => {
     if (!mobileOpen) return undefined;
-    const onKeyDown = (event) => {
-      if (event.key === 'Escape') setMobileOpen(false);
+    
+    const focusableSelector = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
+    const drawerElement = document.getElementById('mobile-navigation');
+    const focusableElements = drawerElement ? drawerElement.querySelectorAll(focusableSelector) : [];
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        closeMobile();
+        return;
+      }
+      
+      if (e.key === 'Tab') {
+        if (focusableElements.length === 0) {
+          e.preventDefault();
+          return;
+        }
+        
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            lastElement.focus();
+            e.preventDefault();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            firstElement.focus();
+            e.preventDefault();
+          }
+        }
+      }
     };
-    document.addEventListener('keydown', onKeyDown);
+
+    document.addEventListener('keydown', handleKeyDown);
     document.body.style.overflow = 'hidden';
+
+    // Focus the first element inside the drawer
+    if (firstElement) {
+      firstElement.focus();
+    }
+
     return () => {
-      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = '';
     };
   }, [mobileOpen]);
 
-  const closeMobile = () => setMobileOpen(false);
   const handleLogout = () => {
     logout();
     closeMobile();
     navigate('/');
   };
+
   const initials = user?.name
     ? user.name.split(' ').map((part) => part[0]).join('').toUpperCase().slice(0, 2)
     : 'RH';
 
   const renderNavLinks = (mobile = false) => {
-    const className = ({ isActive }) => `${mobile ? 'site-drawer__link' : 'site-nav__link'}${isActive ? ' is-active' : ''}`;
+    const className = (toPath) => {
+      // Parse targets using a safe URL constructor helper
+      const targetUrl = new URL(toPath, window.location.origin);
+      const targetPath = targetUrl.pathname;
+      const targetTab = targetUrl.searchParams.get('tab');
+      
+      const currentPath = location.pathname;
+      const currentTab = new URLSearchParams(location.search).get('tab');
+      
+      const isPathMatch = currentPath === targetPath;
+      const isTabMatch = currentTab === targetTab || (!currentTab && !targetTab);
+      const isActive = isPathMatch && isTabMatch;
+      
+      return `${mobile ? 'site-drawer__link' : 'site-nav__link'}${isActive ? ' is-active' : ''}`;
+    };
+
     return (
       <>
-        <NavLink to="/societies" className={className} onClick={closeMobile}>Societies</NavLink>
-        <NavLink to="/events" className={className} onClick={closeMobile}>Events</NavLink>
-        <NavLink to="/news" className={className} onClick={closeMobile}>News</NavLink>
-        {user?.role === 'student' ? <NavLink to="/dashboard" className={className} onClick={closeMobile}>Dashboard</NavLink> : null}
-        {user?.role === 'executive' ? <NavLink to="/executive?tab=dashboard" className={className} onClick={closeMobile}>Dashboard</NavLink> : null}
-        {user?.role === 'executive' ? <NavLink to="/executive?tab=propose" className={className} onClick={closeMobile}>Management</NavLink> : null}
-        {user?.role === 'admin' ? <NavLink to="/admin?tab=dashboard" className={className} onClick={closeMobile}>Dashboard</NavLink> : null}
-        {user?.role === 'admin' ? <NavLink to="/admin?tab=roles" className={className} onClick={closeMobile}>Management</NavLink> : null}
+        <Link to="/societies" className={className('/societies')} onClick={closeMobile}>Societies</Link>
+        <Link to="/events" className={className('/events')} onClick={closeMobile}>Events</Link>
+        <Link to="/news" className={className('/news')} onClick={closeMobile}>News</Link>
+        {user?.role === 'student' ? <Link to="/dashboard" className={className('/dashboard')} onClick={closeMobile}>Dashboard</Link> : null}
+        {user?.role === 'executive' ? <Link to="/executive?tab=dashboard" className={className('/executive?tab=dashboard')} onClick={closeMobile}>Dashboard</Link> : null}
+        {user?.role === 'executive' ? <Link to="/executive?tab=propose" className={className('/executive?tab=propose')} onClick={closeMobile}>Management</Link> : null}
+        {user?.role === 'admin' ? <Link to="/admin?tab=dashboard" className={className('/admin?tab=dashboard')} onClick={closeMobile}>Dashboard</Link> : null}
+        {user?.role === 'admin' ? <Link to="/admin?tab=roles" className={className('/admin?tab=roles')} onClick={closeMobile}>Management</Link> : null}
       </>
     );
   };
@@ -61,14 +121,6 @@ export default function Navbar() {
         </nav>
 
         <div className="site-header__actions">
-          <div className="site-header__search">
-            <input type="text" placeholder="Search Portal..." aria-label="Search Portal" />
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-          </div>
-
           {user ? (
             <div className="site-account">
               <span className="site-account__avatar" title={`${user.name} (${user.role})`}>{initials}</span>

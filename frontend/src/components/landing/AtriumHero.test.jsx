@@ -1,11 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { expect, it, vi } from 'vitest';
+import { expect, it } from 'vitest';
 import AtriumHero from './AtriumHero';
-
-vi.mock('../../hooks/useReducedMotion', () => ({ useReducedMotion: () => true }));
-vi.mock('../../utils/webgl', () => ({ supportsWebGL: () => true }));
 
 it('keeps the complete hero usable without animation', () => {
   render(

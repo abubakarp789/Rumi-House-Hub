@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
 import RoleRoute from './components/RoleRoute';
 
 // Layout Wrappers
@@ -21,6 +20,7 @@ import Dashboard from './pages/Dashboard';
 import ExecutiveDashboard from './pages/ExecutiveDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import NotFound from './pages/NotFound';
+import Forbidden from './pages/Forbidden';
 
 export default function App() {
   return (
@@ -37,6 +37,7 @@ export default function App() {
             <Route path="/events" element={<Events />} />
             <Route path="/events/:id" element={<EventDetail />} />
             <Route path="/news" element={<News />} />
+            <Route path="/forbidden" element={<Forbidden />} />
             
             {/* Fallback 404 Pages */}
             <Route path="*" element={<NotFound />} />
@@ -47,16 +48,16 @@ export default function App() {
             <Route 
               path="/dashboard" 
               element={
-                <ProtectedRoute>
+                <RoleRoute allowedRoles={['student']}>
                   <Dashboard />
-                </ProtectedRoute>
+                </RoleRoute>
               } 
             />
 
             <Route 
               path="/executive" 
               element={
-                <RoleRoute allowedRoles={['executive', 'admin']}>
+                <RoleRoute allowedRoles={['executive']}>
                   <ExecutiveDashboard />
                 </RoleRoute>
               } 
@@ -76,4 +77,3 @@ export default function App() {
     </AuthProvider>
   );
 }
-

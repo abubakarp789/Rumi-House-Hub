@@ -32,9 +32,17 @@ export default function NewsCard({ newsItem, onReadMore }) {
 
   return (
     <article 
-      className="atrium-card flex flex-col justify-between group h-full text-left cursor-pointer" 
+      className="atrium-card flex flex-col justify-between group h-full text-left cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--atrium-gold)]" 
       id={`news-card-${targetId}`}
       onClick={onReadMore}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onReadMore();
+        }
+      }}
     >
       <div>
         <div className="h-48 overflow-hidden relative">

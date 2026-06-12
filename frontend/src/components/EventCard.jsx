@@ -1,12 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import workshopImg from '../assets/landing/news-workshop.png';
+import poetryImg from '../assets/landing/news-poetry.png';
+import cleanupImg from '../assets/landing/news-cleanup.png';
+import academicImg from '../assets/landing/namal-academic-block-display.jpg';
+import courtyardImg from '../assets/landing/namal-courtyard-display.jpg';
 
 const EVENT_IMAGES = {
-  workshops: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCUGE0SnvzE6rhMNTe5-31ShGIHxg6ynDnHQEuty48elCHgP2cdZ1F6TH-RQMLj5r9JfwMW85YhJrbvGmq9V6ltlHtATNhp-I0HZNDGOAqUT9PwTBxnC8GWOa0gzLuV9IHN8MojYepknSUT0tImxiql2yZt253rAZDlZGGsJY7iotO_kkfY6uEFzUhRdl4SsuXi5kaBFh_2-OIjHJzLAg1_8fIUs_noNNFy_sSC1kD1djo_HcFSuYxbnknBLKYYflkdQolzLOrAuCHf',
-  competitions: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDjlFhPi232019Dcfa3ZEvRzcWgIKlRIZYovYEJW_AL7E6QED2ZfbfBmat2Z3x5gn1URLUsE8NThAJfeRvOYlWWbWQfUw8Yr-P6whRwgiKqyRoQIDLvVtzPpbbpT2i29YxbX0kmPwJKaGn6c8eWRnCa_kdW9BJLhSiQodZ3voJDnvU5-Ukb2sSpLc1M47D6limvIHNoCIKihMtnvqXzHxGqiAK5JUKtNT2rs3FituGHyynMEcx-wlv-x967ukdLdUqZ_ViB4DfyThTs',
-  seminars: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDEqQbdhVkVmYb2QOfWuStYZQMcGPvCbdY0cpCMzgQxDyCE883o-CkmG5bTiePsw56-yCi-rU7Ym3vcl77B9fON2yy618S25Xj6iPUDVpXNXRxdGEP3mMK8SQPPJ3Jxan-SFv7jfW_VFstU_SQ5GiWfQP9KobzE4CHmTAUy321w6t8nxfH2Mu3Z0wUws3p4CDYWC2gzRb3NAYVk3uyepjJtm3wXcrPwVxwcc2i4RuB-GfvHbQRMaRiKx3eBk77gN7RzyASxp1zY56hk',
-  sports: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC1fZLuBawnslIobqeH6KLsBvZLsTyXBRRMmlcpK2zBdyjMkeNY0C1HeW1AleYStwcFEqBw6JG3brI08mKh9CCtUB9j7RYwZBqHZIt-QYLApAIaDMiFXfkPvRXE37BdWhVmUTozXwmj9b8HVvH8aiDJObx_xFbtvms-dH4NOaT5IPzMCQacq5kUDVBbpr0D3IE7Tv3AfckFZb-Rdt0KtystFV9JMx3wZ7ZqBgsZhyJd7XDAmxOgNynIOwYUuoMyYH6JuxGm8AkzSBm4',
-  default: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBR71oqRq2rNvLaycrOGB1Xkz7oGP1p1JhS5Q0707Fxa95FCsqr_wrCxtjJ3lHtmEdtyLsc6bEDNWCx7I3rB9I66VJg7KNJiggb0t5eEvSbDFRoMVfq3pzcyujK5D6uHKup5bd6s-89q-ycWJzj3a-GWdxgccr5el00OCGLLdZFP6GCqv_FNG3h6fAy3jH9BytabFLKMcFu6SrA22EaS16DWog67kyTFsZ7PjaTz7qAj3Anq1yTDpe5QE2xL-TXhuICy-1MXdQWJR_b'
+  workshops: workshopImg,
+  competitions: academicImg,
+  seminars: poetryImg,
+  sports: courtyardImg,
+  default: cleanupImg
 };
 
 const CATEGORY_COLORS = {
@@ -18,7 +23,7 @@ const CATEGORY_COLORS = {
 };
 
 export default function EventCard({ event }) {
-  const { id, _id, title, startDateTime, location, status, type, societyId, maxSeats, rsvpsCount } = event;
+  const { id, _id, title, startDateTime, location, status, type, societyId, capacity, registered } = event;
   const targetId = _id || id;
   const societyName = societyId && typeof societyId === 'object' ? societyId.name : 'Rumi House Society';
 
@@ -33,15 +38,15 @@ export default function EventCard({ event }) {
     : 'Oct';
   const yearStr = dateObj 
     ? dateObj.getFullYear()
-    : '2024';
+    : '--';
 
   const formattedTime = dateObj
     ? dateObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
     : '02:00 PM';
 
-  const totalSeats = maxSeats || 50;
-  const takenSeats = rsvpsCount || 0;
-  const filledPercent = Math.min(100, Math.round((takenSeats / totalSeats) * 100));
+  const totalSeats = capacity || 0;
+  const takenSeats = registered || 0;
+  const filledPercent = totalSeats ? Math.min(100, Math.round((takenSeats / totalSeats) * 100)) : 0;
 
   return (
     <article className="atrium-card p-0 flex flex-col justify-between h-full group">

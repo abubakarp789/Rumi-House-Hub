@@ -1,103 +1,77 @@
 const Attendance = require('../models/Attendance');
 const Event = require('../models/Event');
 const RSVP = require('../models/RSVP');
+const { canManageEvent } = require('../utils/accessPolicies');
 const { safeTokenEquals } = require('../utils/secureTokens');
 
-// @desc    Record event attendance via token check-in (Student self-checkin)
-// @route   POST /api/events/:id/checkin
-// @access  Private/Student
-const recordCheckIn = async (req, res, next) => {
+const extractPassToken = (value) => {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
   try {
-    const eventId = req.params.id;
-    const userId = req.user._id;
-    const { token } = req.body;
+    return JSON.parse(raw).passToken || '';
+  } catch {
+    return raw;
+  }
+};
 
-    if (!token) {
-      return res.status(400).json({ error: 'Validation Error', message: 'Attendance verification token is required.' });
+const createAttendance = async (res, eventId, userId, method) => {
+  const attendance = await Attendance.create({ eventId, userId, checkInTime: new Date(), checkInMethod: method });
+  return res.status(201).json({ success: true, message: 'Attendance recorded successfully.', attendance });
+};
+
+const recordOrganizerCheckIn = async (req, res, next) => {
+  try {
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).json({ error: 'Not Found', message: 'Event not found.' });
+    if (!canManageEvent(req.user, event)) {
+      return res.status(403).json({ error: 'Forbidden', message: 'You can only check in attendees for events you manage.' });
     }
-
-    // 1. Fetch the Event document
-    const event = await Event.findById(eventId).select('+qrCodeToken');
-    if (!event) {
-      return res.status(404).json({ error: 'Not Found', message: 'Event not found.' });
-    }
-
     if (event.status !== 'approved') {
-      return res.status(400).json({ error: 'Validation Error', message: 'Attendance checks are disabled for unapproved events.' });
+      return res.status(400).json({ error: 'Validation Error', message: 'Attendance check-in is only allowed for approved events.' });
     }
 
-    // 2. Validate token against the event's qrCodeToken
-    if (!safeTokenEquals(event.qrCodeToken, token)) {
-      return res.status(400).json({ 
-        error: 'Validation Error', 
-        message: 'Invalid attendance token. Verification failed.' 
-      });
-    }
+    const now = new Date();
+    const eventStart = new Date(event.startDateTime);
+    const eventEnd = new Date(event.endDateTime);
 
-    // 3. Verify student has a valid RSVP for this event
-    const hasRsvp = await RSVP.findOne({ eventId, userId, status: 'going' });
-    if (!hasRsvp) {
+    // Configurable time window: check-in is allowed from 24 hours before start until 24 hours after end
+    const windowStart = new Date(eventStart.getTime() - 24 * 60 * 60 * 1000);
+    const windowEnd = new Date(eventEnd.getTime() + 24 * 60 * 60 * 1000);
+
+    if (now < windowStart || now > windowEnd) {
       return res.status(400).json({
         error: 'Validation Error',
-        message: 'Attendance registration failed. You must RSVP to this event before checking in.'
+        message: 'Attendance check-in is only allowed within the event time window (24 hours before start until 24 hours after end).'
       });
     }
 
-    // 4. Enforce duplication blocks
-    const alreadyCheckedIn = await Attendance.findOne({ eventId, userId });
-    if (alreadyCheckedIn) {
-      return res.status(409).json({ 
-        error: 'Conflict Error', 
-        message: 'Attendance verification failed. You have already checked in to this event.' 
-      });
+    const token = extractPassToken(req.body.token);
+    if (!token) return res.status(400).json({ error: 'Validation Error', message: 'A scanned or pasted event pass is required.' });
+    const rsvp = await RSVP.findOne({ eventId: event._id, status: 'going', passToken: token }).select('+passToken');
+    if (!rsvp || !safeTokenEquals(rsvp.passToken, token)) {
+      return res.status(400).json({ error: 'Validation Error', message: 'This pass is invalid for the selected event.' });
     }
-
-    // 4. Create the attendance record
-    const attendance = await Attendance.create({
-      eventId,
-      userId,
-      checkInTime: new Date(),
-      checkInMethod: 'qr'
-    });
-
-    res.status(201).json({
-      success: true,
-      message: 'Attendance recorded successfully! Welcome to the event.',
-      attendance
-    });
+    return await createAttendance(res, event._id, rsvp.userId, 'qr');
   } catch (error) {
-    if (error.code === 11000) {
-      return res.status(409).json({ error: 'Conflict Error', message: 'Duplicate attendance record detected.' });
-    }
-    next(error);
+    if (error.code === 11000) return res.status(409).json({ error: 'Conflict Error', message: 'Attendance is already recorded.' });
+    return next(error);
   }
 };
 
-// @desc    Retrieve complete attendance roster sheets (Admin only)
-// @route   GET /api/events/:id/attendance
-// @access  Private/Admin (or Executive)
 const getEventAttendance = async (req, res, next) => {
   try {
-    const eventId = req.params.id;
-
-    // Check if event exists
-    const event = await Event.findById(eventId);
-    if (!event) {
-      return res.status(404).json({ error: 'Not Found', message: 'Event not found.' });
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).json({ error: 'Not Found', message: 'Event not found.' });
+    if (!canManageEvent(req.user, event)) {
+      return res.status(403).json({ error: 'Forbidden', message: 'You can only view attendance for events you manage.' });
     }
-
-    // Retrieve attendance sheets, populating user details
-    const attendanceRecords = await Attendance.find({ eventId })
+    const records = await Attendance.find({ eventId: event._id })
       .populate('userId', 'name email registrationNumber department batch')
       .sort({ checkInTime: 1 });
-
-    res.json(attendanceRecords);
+    return res.json(records);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
 
-module.exports = {
-  recordCheckIn,
-  getEventAttendance
-};
+module.exports = { getEventAttendance, recordOrganizerCheckIn };

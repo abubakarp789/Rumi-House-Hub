@@ -164,7 +164,6 @@ const updateMembershipStatus = async (req, res, next) => {
       return res.status(400).json({ error: 'Validation Error', message: `Membership request is already marked as ${status}.` });
     }
 
-    const oldStatus = membership.status;
     membership.status = status;
     
     if (status === 'approved') {
@@ -175,16 +174,9 @@ const updateMembershipStatus = async (req, res, next) => {
 
     await membership.save();
 
-    // Dynamically maintain Society count calculations
-    const society = await Society.findById(societyId);
-    if (society) {
-      if (status === 'approved' && oldStatus !== 'approved') {
-        society.memberCount += 1;
-      } else if (status !== 'approved' && oldStatus === 'approved') {
-        society.memberCount = Math.max(0, society.memberCount - 1);
-      }
-      await society.save();
-    }
+    // Recalculate from source records so concurrent moderation cannot drift the counter.
+    const memberCount = await Membership.countDocuments({ societyId, status: 'approved' });
+    await Society.updateOne({ _id: societyId }, { $set: { memberCount } });
 
     res.json({
       success: true,

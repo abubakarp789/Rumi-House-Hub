@@ -19,7 +19,7 @@ it('renders four numbered societies and the directory link', () => {
 
 it('renders the featured event and calendar route', () => {
   renderWithRouter(<EventsFeature events={fallbackEvents} />);
-  expect(screen.getByRole('heading', { name: /Intra-Society Debate Championship/i })).toBeVisible();
+  expect(screen.getByRole('heading', { name: /Namal Sports Gala 2026/i })).toBeVisible();
   expect(screen.getByRole('link', { name: /View Full Calendar/i })).toHaveAttribute('href', '/events');
 });
 

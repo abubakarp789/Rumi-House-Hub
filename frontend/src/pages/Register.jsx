@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import logoImg from '../assets/logo.png';
 
 export default function Register() {
   const { register, user, authError, setAuthError } = useContext(AuthContext);
@@ -122,11 +123,11 @@ export default function Register() {
         </div>
         
         {/* Academic Library Mockup Image */}
-        <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-outline-variant bg-white">
+        <div className="relative w-full aspect-video rounded-lg overflow-hidden border border-outline-variant bg-white flex items-center justify-center p-8">
           <img 
-            alt="Academic Library" 
-            className="w-full h-full object-cover grayscale-[0.3] opacity-80" 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXTFNqSs80yWj-bdXe9ayL-Vtb_dXGV5PfF9VpAWDUliHcmbPS4pu4vFlQpFFCQZdAIfh3XgjPl8V92YOr6nTiDodoIgagISPOUFPg0390YzTJfggOC4sEAQ196Oomveffr2X23nWIbcqP3t_w6LXXE1J2FYLmrH7NfpSuG-9E72nJysLxbYtVgbafDwLx1T3j7YpiFXEqZI8-m43PZ67eBoZnoyd8pISw44QEL8rz5ABHYyTnK3AFrJ3kBd2kSvjc1z6OG56jbtaR"
+            alt="Namal Logo" 
+            className="max-h-[80%] max-w-[80%] object-contain grayscale-[0.3] opacity-80" 
+            src={logoImg}
           />
         </div>
       </div>

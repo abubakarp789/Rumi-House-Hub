@@ -36,8 +36,8 @@ export const fallbackSocieties = [
   {
     _id: 'fallback-sports',
     isFallback: true,
-    name: 'Namal Sports & Wellness Society',
-    shortName: 'Sports & Wellness',
+    name: 'Namal Sports & Adventure Club (NSAC)',
+    shortName: 'Sports & Adventure',
     categoryLabel: 'Sports Pillar',
     description: 'Promotes fitness, sportsmanship, and wellness through intra-society tournaments and training programs.',
     estYear: '2012',
@@ -49,32 +49,32 @@ export const fallbackEvents = [
   {
     _id: 'fallback-debate',
     isFallback: true,
-    title: 'Intra-Society Debate Championship',
-    location: 'Namal Auditorium',
-    startDateTime: '2025-06-24T10:00:00+05:00',
-    endDateTime: '2025-06-24T16:00:00+05:00',
-    description: 'Top speakers from across Namal societies compete in a day of ideas, argument, and leadership.',
+    title: 'Namal Sports Gala 2026',
+    location: 'Namal Sports Facility',
+    startDateTime: '2026-06-15T09:00:00+05:00',
+    endDateTime: '2026-06-15T18:00:00+05:00',
+    description: 'The premier athletic league of Namal University, featuring athletics, cricket, football, and badminton.',
     category: 'FEATURED EVENT',
     status: 'approved'
   },
   {
     _id: 'fallback-clean-up',
     isFallback: true,
-    title: 'Namal Clean-Up Drive',
-    location: 'Namal Lake',
-    startDateTime: '2025-06-18T09:00:00+05:00',
-    description: 'Students from multiple societies joined hands to clean and green key areas around campus and the lake.',
+    title: 'Namal Mathematics Carnival 4.0',
+    location: 'Academic Block Auditorium',
+    startDateTime: '2026-06-18T10:00:00+05:00',
+    description: 'Namal signature mathematics carnival featuring speed math, logic puzzles, and team quizzes.',
     category: 'EVENTS',
     status: 'approved'
   },
   {
     _id: 'fallback-neural',
     isFallback: true,
-    title: 'NCS Workshop on Neural Networks',
-    location: 'Huawei Lab',
-    startDateTime: '2025-06-12T14:30:00+05:00',
-    description: 'Hands-on session exploring the future of AI and deep learning with real-world applications.',
-    category: 'TECHNOLOGY',
+    title: 'NAMAL Ideathon & Innovation Expo 2026',
+    location: 'Main Building',
+    startDateTime: '2026-06-22T09:00:00+05:00',
+    description: 'A showcase for entrepreneurial ideas, creative startups, and student innovation.',
+    category: 'COMPETITION',
     status: 'approved'
   }
 ];

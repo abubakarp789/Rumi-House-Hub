@@ -51,7 +51,7 @@ export default function SocietiesExhibition({ societies }) {
   const displaySocieties = societies.slice(0, 4);
 
   return (
-    <section className="landing-section societies-exhibition" aria-labelledby="societies-title">
+    <section id="societies" className="landing-section societies-exhibition" aria-labelledby="societies-title">
       <div className="landing-container">
         {/* Section Header */}
         <div className="section-top-block">
@@ -60,7 +60,7 @@ export default function SocietiesExhibition({ societies }) {
             <div className="section-heading-block">
               <h2 id="societies-title" className="section-title">Active Societies</h2>
               <p className="section-desc">
-                The pillars of our intellectual and social community. We currently have 15 active groups.
+                The pillars of our intellectual and social community. Explore {societies.length} featured groups.
               </p>
             </div>
             <Link className="landing-text-link" to="/societies">

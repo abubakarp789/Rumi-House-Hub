@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { recordCheckIn, getEventAttendance } = require('../controllers/attendanceController');
+const { recordOrganizerCheckIn, getEventAttendance } = require('../controllers/attendanceController');
 const { protect } = require('../middleware/authMiddleware');
 const { authorizeRoles } = require('../middleware/roleMiddleware');
 
-// Student self-checkin endpoint
-router.post('/:id/checkin', protect, authorizeRoles('student'), recordCheckIn);
+// Organizer check-in accepts a student's individual event pass.
+router.post('/:id/attendance/checkin', protect, authorizeRoles('admin', 'executive'), recordOrganizerCheckIn);
 
 // Admin/Executive sheet view rosters
 router.get('/:id/attendance', protect, authorizeRoles('admin', 'executive'), getEventAttendance);

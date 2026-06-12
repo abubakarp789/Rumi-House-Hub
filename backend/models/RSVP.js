@@ -15,6 +15,12 @@ const RSVPSchema = new mongoose.Schema({
     type: String, 
     enum: ['going', 'interested', 'cancelled'], 
     default: 'going' 
+  },
+  passToken: {
+    type: String,
+    unique: true,
+    sparse: true,
+    select: false
   }
 }, { timestamps: true });
 

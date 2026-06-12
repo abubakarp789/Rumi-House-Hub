@@ -122,7 +122,7 @@ export default function EventDetail() {
       </div>
 
       {/* Main Details Canvas */}
-      <main className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-4 relative z-10">
+      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-4 relative z-10">
         <header className="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-12 items-end">
           <div className="lg:col-span-8">
             <div className="flex items-center gap-3 mb-4">
@@ -130,7 +130,7 @@ export default function EventDetail() {
                 {event.status || 'Active'}
               </span>
               <span className="text-on-surface-variant font-label-uppercase text-[10px] tracking-widest font-semibold uppercase">
-                ID: EVENT-2024-{event.type || 'CAMPUS'}
+                ID: {String(event._id || 'EVENT').slice(-8).toUpperCase()}
               </span>
             </div>
             <h1 className="font-display-lg text-display-lg text-primary leading-tight mb-4">
@@ -176,26 +176,6 @@ export default function EventDetail() {
               </p>
             </section>
 
-            {/* Standard Schedule Grid */}
-            <section className="bg-surface-container-low p-8 rounded-lg border border-outline-variant">
-              <h2 className="font-headline-sm text-headline-sm text-on-surface mb-8">Event Schedule</h2>
-              <div className="space-y-6">
-                <div className="flex gap-6 items-start">
-                  <span className="font-label-uppercase text-label-uppercase text-primary w-24 pt-1 font-bold">{formattedTime}</span>
-                  <div>
-                    <h4 className="font-body-md font-bold text-on-surface">Opening Keynote &amp; Commencements</h4>
-                    <p className="font-body-sm text-on-surface-variant">Introduction of guests, rules of co-curricular engagement, and team allocations.</p>
-                  </div>
-                </div>
-                <div className="flex gap-6 items-start border-t border-outline-variant/30 pt-6">
-                  <span className="font-label-uppercase text-label-uppercase text-primary w-24 pt-1 font-bold">Session 2</span>
-                  <div>
-                    <h4 className="font-body-md font-bold text-on-surface">Active Group Work &amp; Prototype Builds</h4>
-                    <p className="font-body-sm text-on-surface-variant">Teams actively run through domain schedules under mentor tracking.</p>
-                  </div>
-                </div>
-              </div>
-            </section>
           </div>
 
           {/* Sticky Side RSVP and Passes card */}
@@ -294,48 +274,10 @@ export default function EventDetail() {
                 )}
               </div>
 
-              <hr className="border-outline-variant" />
-
-              {/* Extras Metadata */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-primary text-xl">workspace_premium</span>
-                  <div>
-                    <p className="font-label-uppercase text-[10px] text-on-surface-variant font-bold">CERTIFICATION</p>
-                    <p className="font-body-sm text-on-surface font-semibold text-xs">Co-curricular Credits Credentialed</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-primary text-xl">restaurant</span>
-                  <div>
-                    <p className="font-label-uppercase text-[10px] text-on-surface-variant font-bold">REFRESHMENTS</p>
-                    <p className="font-body-sm text-on-surface font-semibold text-xs">Complimentary Tea &amp; Session Snacks</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Venue Location Marker Map */}
-            <div>
-              <p className="font-label-uppercase text-label-uppercase text-on-surface-variant mb-4 font-bold text-xs">VENUE LOCATION MAP</p>
-              <div className="h-48 w-full bg-surface-variant border border-outline-variant relative overflow-hidden group">
-                <img 
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxAOA8xYZYIG60b5mehlZ26K7iZH1UM-IQ0_C-wPGnKzlyvlmc_gZoNLFO4irpMFxBK1QGHnHzLDskg8lolSwJarn1xZx5gKODBsFH9ooKsNzfdKBuLNAwrucsUT6Y1yH4Zfuigp_uSSez7F1y35bs1k7WrHW6rzvp7GAAd3tM_QRmhFL213zTfI6SE7WRS5R0rik6LLFgebFAPI-j6mKvrgdgSTfuabdus5T_kHC9wgjvKnkFZ-tlj5_U3KdIRGnSsrZGItXKageM" 
-                  alt="Campus Map Location" 
-                />
-                <div className="absolute inset-0 bg-primary/10 flex items-center justify-center">
-                  <div className="bg-white px-4 py-2 border border-primary shadow-md">
-                    <span className="font-label-uppercase text-label-uppercase text-primary text-[10px] font-bold uppercase">
-                      {event.location}
-                    </span>
-                  </div>
-                </div>
-              </div>
             </div>
           </aside>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

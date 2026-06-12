@@ -16,7 +16,7 @@ export function AuthProvider({ children }) {
         try {
           setLoading(true);
           const response = await api.getCurrentUser();
-          setUser(response.user);
+          setUser({ ...response.user, memberships: response.memberships, rsvps: response.rsvps });
         } catch (err) {
           console.error('Session hydration failed:', err);
           // Token expired or invalid, clear session states
@@ -39,8 +39,11 @@ export function AuthProvider({ children }) {
       
       localStorage.setItem('rumi_jwt_token', data.token);
       setToken(data.token);
-      setUser(data.user);
-      return data.user;
+      
+      // Fetch full profile to populate memberships and RSVPs on login
+      const profile = await api.getCurrentUser();
+      setUser({ ...profile.user, memberships: profile.memberships, rsvps: profile.rsvps });
+      return profile.user;
     } catch (err) {
       setAuthError(err.message || 'Incorrect email or password.');
       throw err;
@@ -57,7 +60,7 @@ export function AuthProvider({ children }) {
       
       localStorage.setItem('rumi_jwt_token', data.token);
       setToken(data.token);
-      setUser(data.user);
+      setUser({ ...data.user, memberships: [], rsvps: [] });
       return data.user;
     } catch (err) {
       setAuthError(err.message || 'Registration failed.');

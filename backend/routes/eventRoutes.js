@@ -8,12 +8,12 @@ const {
   rsvpEvent, 
   getEventQr 
 } = require('../controllers/eventController');
-const { protect } = require('../middleware/authMiddleware');
+const { optionalProtect, protect } = require('../middleware/authMiddleware');
 const { authorizeRoles } = require('../middleware/roleMiddleware');
 
 // Public read schedule feeds
-router.get('/', getEvents);
-router.get('/:id', getEventById);
+router.get('/', optionalProtect, getEvents);
+router.get('/:id', optionalProtect, getEventById);
 
 // Executive/Admin proposed events creation
 router.post('/', protect, authorizeRoles('executive', 'admin'), createEventProposal);
@@ -25,6 +25,6 @@ router.patch('/:id/status', protect, authorizeRoles('admin'), updateEventStatus)
 router.post('/:id/rsvp', protect, authorizeRoles('student'), rsvpEvent);
 
 // Protected dynamic event QR generation pass
-router.get('/:id/qr', protect, getEventQr);
+router.get('/:id/qr', protect, authorizeRoles('student'), getEventQr);
 
 module.exports = router;

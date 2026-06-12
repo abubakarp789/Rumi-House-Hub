@@ -4,6 +4,7 @@ import NewsCard from '../components/NewsCard';
 import LoadingState from '../components/LoadingState';
 import EmptyState from '../components/EmptyState';
 import Modal from '../components/Modal';
+import academicImg from '../assets/landing/namal-academic-block-display.jpg';
 
 export default function News() {
   const [news, setNews] = useState([]);
@@ -70,12 +71,23 @@ export default function News() {
           {/* Spotlight Grid (Featured + Sidebar News Stack) */}
           <div className="grid grid-cols-12 gap-gutter">
             {/* Featured Spotlight Card (Left) */}
-            <article className="col-span-12 lg:col-span-8 grid grid-cols-1 md:grid-cols-2 atrium-card group cursor-pointer animate-fade-in-up animate-delay-100">
+            <article 
+              className="col-span-12 lg:col-span-8 grid grid-cols-1 md:grid-cols-2 atrium-card group cursor-pointer animate-fade-in-up animate-delay-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--atrium-gold)]"
+              onClick={() => handleOpenArticle(news[0])}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleOpenArticle(news[0]);
+                }
+              }}
+            >
               <div className="h-64 md:h-auto relative bg-[#e5e9e7] overflow-hidden">
                 <img 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" 
                   alt={news[0].title}
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5TAJP-TNMW6xQV-A4k9730zX2t288n0gTzgY0M30OtFfazFQcFF4mSI1iwE9LDY-UrkYfCjKsssOWYsZpz7Aac9WM02gf1UiumgfYyIMO4GVpAcdXjpDbSmH1WZwNR9LPzBWvAODBH9Z03yfuTNt6eRb01sLxgYeB8jbMd9_YLgQHCZQDENGUMG0Eui-Nv1mSMPgwbHaqN-WJAq5MPhVYAj3lhBTYREnpfzuxPUf_soX_m7iNwxFa9ksoDqrILgkFW7qOOceGDdYp"
+                  src={academicImg}
                 />
                 <div className="absolute top-4 left-4 shadow-sm">
                   <span className="atrium-badge px-3 py-1 text-[9px] font-bold uppercase tracking-wider">
@@ -93,12 +105,9 @@ export default function News() {
                 <p className="text-[#50665b] font-body-sm mb-6 leading-relaxed line-clamp-3">
                   {news[0].summary}
                 </p>
-                <button 
-                  onClick={() => handleOpenArticle(news[0])} 
-                  className="text-[var(--atrium-green)] hover:text-[var(--atrium-gold)] font-bold self-start border-0 bg-transparent cursor-pointer font-label-uppercase text-label-uppercase text-xs tracking-wider flex items-center gap-1 transition-colors duration-200"
-                >
+                <span className="text-[var(--atrium-green)] hover:text-[var(--atrium-gold)] font-bold self-start border-0 bg-transparent font-label-uppercase text-label-uppercase text-xs tracking-wider flex items-center gap-1 transition-colors duration-200">
                   Read full report <span className="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
-                </button>
+                </span>
               </div>
             </article>
 
@@ -109,7 +118,16 @@ export default function News() {
                 return (
                   <article 
                     key={item._id} 
-                    className={`atrium-card border-l-4 ${borderClass} p-6 flex flex-col justify-between text-left group cursor-pointer`}
+                    className={`atrium-card border-l-4 ${borderClass} p-6 flex flex-col justify-between text-left group cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--atrium-gold)]`}
+                    onClick={() => handleOpenArticle(item)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleOpenArticle(item);
+                      }
+                    }}
                   >
                     <div>
                       <div className="flex justify-between items-center mb-2">
@@ -127,12 +145,9 @@ export default function News() {
                         {item.summary}
                       </p>
                     </div>
-                    <button 
-                      onClick={() => handleOpenArticle(item)}
-                      className="text-xs text-[var(--atrium-green)] hover:text-[var(--atrium-gold)] font-bold self-start mt-4 border-0 bg-transparent cursor-pointer font-label-uppercase text-label-uppercase tracking-wider flex items-center gap-1 transition-colors duration-200"
-                    >
+                    <span className="text-xs text-[var(--atrium-green)] hover:text-[var(--atrium-gold)] font-bold self-start mt-4 border-0 bg-transparent font-label-uppercase text-label-uppercase tracking-wider flex items-center gap-1 transition-colors duration-200">
                       Read bulletin <span className="material-symbols-outlined text-xs transition-transform group-hover:translate-x-1">arrow_forward</span>
-                    </button>
+                    </span>
                   </article>
                 );
               })}

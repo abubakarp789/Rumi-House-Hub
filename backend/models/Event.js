@@ -54,6 +54,10 @@ const EventSchema = new mongoose.Schema({
     unique: true,
     select: false
   },
+  rejectionReason: {
+    type: String,
+    trim: true
+  },
   createdBy: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User', 

@@ -39,7 +39,8 @@ export function normalizeHomeContent({ societies, events, news }) {
     news: resolvedNews.slice(0, 4),
     counts: {
       societies: societies?.length || fallbackSocieties.length,
-      events: events?.length || fallbackEvents.length
+      events: events?.length || fallbackEvents.length,
+      news: news?.length || fallbackNews.length
     }
   };
 }

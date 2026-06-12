@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import logoImg from '../assets/logo.png';
 
 export default function Login() {
   const { login, user, authError, setAuthError } = useContext(AuthContext);
@@ -10,21 +11,22 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    if (user) {
-      if (user.role === 'admin') navigate('/admin');
-      else if (user.role === 'executive') navigate('/executive');
-      else navigate('/dashboard');
-    }
-  }, [user, navigate]);
+  const roleHome = (role) => {
+    if (role === 'admin') return '/admin';
+    if (role === 'executive') return '/executive';
+    return '/dashboard';
+  };
 
   useEffect(() => {
-    if (location.search.includes('expired=true')) {
-      setAuthError('Your authentication session has expired. Please sign in again.');
-    } else {
-      setAuthError('');
+    if (user) {
+      const redirectTo = location.state?.from || roleHome(user.role);
+      navigate(redirectTo, { replace: true });
     }
-  }, [location, setAuthError]);
+  }, [user, navigate, location.state]);
+
+  useEffect(() => {
+    setAuthError('');
+  }, [setAuthError]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -43,9 +45,8 @@ export default function Login() {
       setLoading(true);
       const loggedUser = await login(formData.email, formData.password);
 
-      if (loggedUser.role === 'admin') navigate('/admin');
-      else if (loggedUser.role === 'executive') navigate('/executive');
-      else navigate('/dashboard');
+      const redirectTo = location.state?.from || roleHome(loggedUser.role);
+      navigate(redirectTo, { replace: true });
     } catch (err) {
       // AuthContext owns the visible error state.
     } finally {
@@ -62,8 +63,8 @@ export default function Login() {
           <div className="inline-flex items-center justify-center w-24 h-24 mb-6 bg-white border border-outline-variant rounded-full shadow-sm">
             <img 
               alt="Namal Crest" 
-              className="w-16 h-16 object-contain" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIMQux_cb2RMNu20L98dAdR1LXHoUlNhEPKNA1cDgw00uJ-4PRLZ4D_T-_X-M-Gjc5IyXbvx9Ipg3D3qOWOW2yvrgrfiegaxFaBKdG9syTacWUxiilkGrU6Z15OFf6jLMYD3UBrnagpHBVwEmGox_MPRYq4U-T4GqkoCKzZ7lQOwddY1gZ42zPj78VowpKv9VmCTmvRs_HZLXsa0hS-JAKr_mL1zhMM9V4U8aXG9vNoe3jqBb5ZQs63auuWy3-dKWbduVfMLp036_c"
+              className="w-16 h-16 object-contain font-serif font-bold text-center text-primary" 
+              src={logoImg}
             />
           </div>
           <h1 className="font-display-lg text-display-lg text-primary mb-2">Rumi House Hub</h1>
@@ -103,13 +104,10 @@ export default function Login() {
             </div>
 
             <div>
-              <div className="flex justify-between items-center mb-3">
+              <div className="mb-3">
                 <label className="block font-label-uppercase text-label-uppercase text-on-surface-variant font-bold" htmlFor="login-password">
                   Secure Password
                 </label>
-                <Link to="#" className="font-label-uppercase text-label-uppercase text-primary hover:underline transition-all text-xs font-semibold">
-                  Forgot?
-                </Link>
               </div>
               <div className="relative">
                 <input 
@@ -123,20 +121,15 @@ export default function Login() {
                   onChange={handleInputChange}
                   disabled={loading}
                 />
-                <span 
-                  className="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant cursor-pointer text-xl" 
+                <button 
+                  type="button"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant cursor-pointer text-xl bg-transparent border-0 p-0" 
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? 'visibility_off' : 'visibility'}
-                </span>
+                </button>
               </div>
-            </div>
-
-            <div className="flex items-center pt-2">
-              <input className="w-4 h-4 text-primary border-outline-variant rounded focus:ring-primary" id="remember" type="checkbox" />
-              <label className="ml-2 font-body-sm text-body-sm text-on-surface-variant font-medium" htmlFor="remember">
-                Remember my credentials for 30 days
-              </label>
             </div>
 
             <button 

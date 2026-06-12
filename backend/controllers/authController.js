@@ -3,14 +3,12 @@ const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 const { isValidNamalEmail, isValidRegNumber } = require('../utils/validators');
 
-const SELF_SERVICE_ROLES = ['student', 'executive'];
-
 // @desc    Register a new user
 // @route   POST /api/auth/register
 // @access  Public
 const registerUser = async (req, res, next) => {
   try {
-    const { name, email, registrationNumber, role = 'student', department, batch, password } = req.body;
+    const { name, email, registrationNumber, department, batch, password } = req.body;
 
     // 1. Validation checks
     if (!name || !name.trim()) {
@@ -54,13 +52,6 @@ const registerUser = async (req, res, next) => {
       });
     }
 
-    if (!SELF_SERVICE_ROLES.includes(role)) {
-      return res.status(400).json({
-        error: 'Validation Error',
-        message: 'Public registration only supports student and executive accounts.'
-      });
-    }
-
     // Normalize inputs
     const lowercaseEmail = email.toLowerCase().trim();
     const uppercaseReg = registrationNumber.toUpperCase().trim();
@@ -91,7 +82,7 @@ const registerUser = async (req, res, next) => {
       name: name.trim(),
       email: lowercaseEmail,
       registrationNumber: uppercaseReg,
-      role,
+      role: 'student',
       department: department.trim(),
       batch: batch.trim(),
       passwordHash
@@ -172,6 +163,7 @@ const getUserProfile = async (req, res, next) => {
     // Fetch user memberships and RSVPs relational records to serve the dashboard in one network call
     const Membership = require('../models/Membership');
     const RSVP = require('../models/RSVP');
+    const Attendance = require('../models/Attendance');
 
     const memberships = await Membership.find({ userId: req.user._id }).populate('societyId', 'name category slug');
     const rsvps = await RSVP.find({ userId: req.user._id }).populate({
@@ -181,12 +173,18 @@ const getUserProfile = async (req, res, next) => {
         select: 'name'
       }
     });
+    const attendance = await Attendance.find({ userId: req.user._id }).select('eventId');
+    const attendedEventIds = new Set(attendance.map((record) => String(record.eventId)));
+    const dashboardRsvps = rsvps.map((rsvp) => ({
+      ...rsvp.toObject(),
+      checkedIn: attendedEventIds.has(String(rsvp.eventId?._id || rsvp.eventId))
+    }));
 
     res.json({
       success: true,
       user: req.user,
       memberships,
-      rsvps
+      rsvps: dashboardRsvps
     });
   } catch (error) {
     next(error);

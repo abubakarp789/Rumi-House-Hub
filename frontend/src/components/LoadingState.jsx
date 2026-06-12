@@ -4,9 +4,9 @@ export default function LoadingState({ count = 3 }) {
   const loaders = Array.from({ length: count }, (_, idx) => idx);
 
   return (
-    <div className="grid-3" aria-live="polite" aria-busy="true">
+    <>
       {loaders.map((item) => (
-        <div key={item} className="card skeleton-card">
+        <div key={item} className="card skeleton-card" aria-live="polite" aria-busy="true">
           <div className="skeleton-box skeleton-badge"></div>
           <div className="skeleton-box skeleton-title"></div>
           <div className="skeleton-box skeleton-copy"></div>
@@ -16,6 +16,6 @@ export default function LoadingState({ count = 3 }) {
           </div>
         </div>
       ))}
-    </div>
+    </>
   );
 }

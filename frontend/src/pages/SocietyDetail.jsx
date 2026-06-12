@@ -2,14 +2,19 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import * as api from '../api/api';
+import workshopImg from '../assets/landing/news-workshop.png';
+import poetryImg from '../assets/landing/news-poetry.png';
+import cleanupImg from '../assets/landing/news-cleanup.png';
+import academicImg from '../assets/landing/namal-academic-block-display.jpg';
+import courtyardImg from '../assets/landing/namal-courtyard-display.jpg';
 
 const CATEGORY_IMAGES = {
-  technical: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDL3DmGc8B3hzzNyH8UnOUcQkb5Saf6-anJeoA5ACuEZjxkr0VnYoQn_DU7dl6z0oOZMmB41O74xMHEoxjy55FDAje9q_4ftsAEkdmcPpSlmcWIRWCUlFKfx85Yuhwjexetit0B1Ckx1IWA7SIrdoBh2YJlcL7ZuBXASOsRmozln8NMOWhyR-n9r2w1Gs0xx9ulaJKSLt4t2gU_SOA6JgPEI2frjjszPDd58nEg5uywM7taZW2IPU5CZsXdHra-s5T2o_MlHV8kHFWo',
-  arts: 'https://lh3.googleusercontent.com/aida-public/AB6AXuHeZ0qHPm2HQHGB_14LwI4xAGuGpQp8f3pW6HD-xN7OsWRzNVNvYjGw4NRrLOh0JZWGp5Sg440rnAWrjXRwgfyq6dfPB0mzfHgDTuVdLsgln7xl4c58Kyj3xaXgRGwNU1KGiHsAEwaIvvL57lBiUyp6Fh7t4OrktFy96b7VoUzGtH4-7I6qAfKon-PjeIfYtOMimoLS1VzjLrDTqwRa5fiQwIBVkxeukpjg8EVCRLC471DdKKTSwM3HJbOkGdcV1K3PTQQ9TR7mXAZ',
-  literary: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBy8aSZASA66VrZoS7DP4tfi0_EJAtwprjrc3CSREPojoBBkSPZsakwKzEcQvJHnIw7pH4bJfDmONhrODzABfQQRU6qTa6PFgYi2kSEvyPAeYgvErAb9MfCR7RDwpgZn8gi5R2IdbyPOLt96-EYd5S60XYcZUN81KotVfANQ7qeuGYHO9WITUW6vt6O9WMcxmdsbZWHNaw978wd5CzdVhHFiHJy0Ps3Fz0NY9JTRDyVugziBjNw0JPWVL33jt4zAPXX6CmIESVzPKBI',
-  sports: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDkPxw89IuNpc0MQcKSB7kJJr-zo_6Xu1Xu_iDV9_CdTHxvyJthJr2zYDxtcY9VkmRGq7sJFzHvh9zSCeGJXfqZ1Dk43XoJC6_j7RP2AYw0JzSLxc3zhW-K68AAZ7OpLZJ2BC_kR-EaYkSmqfMRO_J5bpTNekONTAEeOemnVTHQe8mEQI7gCYLC_fHVzmWNNBncDjyI-7Y5Yad3RQnbS_ETbd7wBZzcVe0Fd8rI8nhw6kbOeiSKntS_frPNuGyUrV5esK3LbDB2-IJ6',
-  social: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDHCXfIr0XsWyJgc9TlwYrdMU9lp4Tr0ZUlfFUFgIDD_tCNbs0wgyVC_81ZmJknFaRC7-UMW8Xx5i6dkbsb7Z37Dd48FgHbs0ACpQNFfuN5FDGWxeHgZlv8DRauf7GeYy4RJ-B0DhGQ-3B8mPZT56WWnS8h3ml2ubSPW8Lgu12x64BQ2Lle-qmFxVytVSIA9T-ReLGlS_SVHpPxQmCbo5x4ozzIOJM8uT4Alx8eIXhWt2GXs9-v7fvbLYxy6gRalBGXylrTUJ1vY3s5',
-  default: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC20N6sdr1VYNsyL18k2Ncy0WKUtg00NktExF4GPuNKPkXibnLadck0UmvivEw2PJvVQE2tRjwClle7sqry1WwzRO4oxhrBOKDGkMkZjBqFCWsG1VjRqBb3mUfwCIkdAZ_-4MUdtDaSpYWntkwh28oQOaJGH4hVCJXryL08tmDyogDueJBPo6R5NLdT4aqiaX06Vocp6rolmz6VUE8rPQ032-zEUJt79G25iTS4-7TodZGDL9mp5wJAUgeg3X6ILCjXFXmm0oLyShZ4'
+  technical: workshopImg,
+  arts: poetryImg,
+  literary: poetryImg,
+  sports: courtyardImg,
+  social: cleanupImg,
+  default: academicImg
 };
 
 const CATEGORY_BADGES = {
@@ -50,8 +55,7 @@ export default function SocietyDetail() {
         setSociety(socData);
 
         if (user) {
-          const profile = await api.getCurrentUser();
-          const activeMembership = (profile.memberships || []).find((m) => m.societyId._id === id || m.societyId === id);
+          const activeMembership = (user.memberships || []).find((m) => (m.societyId?._id || m.societyId) === id);
           if (activeMembership) {
             setMembershipStatus(activeMembership.status);
           }
@@ -82,47 +86,6 @@ export default function SocietyDetail() {
     }
   };
 
-  const getCategoryActivities = (category) => {
-    const cat = category ? category.toLowerCase() : 'default';
-    switch (cat) {
-      case 'literary':
-        return [
-          { title: 'Debating Circles', desc: 'Weekly debating circles and parliamentary simulations.' },
-          { title: 'Creative Contests', desc: 'Creative essay contests, poetry recitations, and book reviews.' },
-          { title: 'Declamation Prep', desc: 'External declamation preparation with peer critique.' },
-          { title: 'Literary Sprints', desc: 'Active student writing and classical literature readings.' }
-        ];
-      case 'arts':
-        return [
-          { title: 'Canvas Workshops', desc: 'Calligraphy, canvas, and visual composition workshops.' },
-          { title: 'Scenic Design', desc: 'Stage design and decor support for student-led events.' },
-          { title: 'Seasonal Exhibits', desc: 'Seasonal exhibitions with critique boards.' },
-          { title: 'Digital Media Labs', desc: 'Photography, graphic designs, and digital sketch workshops.' }
-        ];
-      case 'sports':
-        return [
-          { title: 'Intra-House Plays', desc: 'Intra-house cricket, football, and basketball tournaments.' },
-          { title: 'Weekly Drills', desc: 'Weekly athletic drills and fitness challenges.' },
-          { title: 'Outdoor Hikes', desc: 'Adventure hikes and outdoor leadership activities.' },
-          { title: 'Athletic Sprints', desc: 'Training classes for local and national sports meets.' }
-        ];
-      case 'social':
-        return [
-          { title: 'Blood Campaigns', desc: 'Blood donation campaigns and neighborhood cleanup drives.' },
-          { title: 'School Volunteering', desc: 'School restoration volunteering and donation campaigns.' },
-          { title: 'Welfare Outreach', desc: 'Welfare outreach around Mianwali communities.' },
-          { title: 'Eco Awareness', desc: 'Campus tree plantations and energy sustainability drives.' }
-        ];
-      case 'technical':
-      default:
-        return [
-          { title: 'Weekly Build Sprints', desc: 'Hands-on rapid prototyping sessions using Arduino and Raspberry Pi.' },
-          { title: 'Algorithm Jams', desc: 'Competitive coding challenges focused on neural net architecture.' },
-          { title: 'Colloquium Series', desc: 'Monthly guest lectures from industry experts and visiting PhDs.' },
-          { title: 'Regional Comps', desc: 'Preparing teams for the National Robotics Olympiad.' }
-        ];
-    }
-  };
 
   if (loading) {
     return (
@@ -338,39 +301,6 @@ export default function SocietyDetail() {
         </div>
       </section>
 
-      {/* Detailed Content: Mission & Goals */}
-      <section className="max-w-container-max mx-auto px-margin-desktop py-12 border-t border-outline-variant">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
-          <div className="lg:col-span-6 space-y-6">
-            <h4 className="font-headline-sm text-headline-sm text-primary flex items-center gap-3">
-              <span className="w-8 h-px bg-primary"></span> Our Strategic Vision
-            </h4>
-            <div className="pl-0 sm:pl-10 space-y-4">
-              <p className="font-body-md text-on-surface-variant leading-relaxed">
-                {society.description}
-              </p>
-              <p className="font-body-md text-on-surface-variant leading-relaxed">
-                Our mission is to foster collaborative co-curricular spaces that support regional development, academic discovery, and civic responsibility among Namal students.
-              </p>
-            </div>
-          </div>
-
-          <div className="lg:col-span-6 space-y-6">
-            <h4 className="font-headline-sm text-headline-sm text-primary flex items-center gap-3">
-              <span className="w-8 h-px bg-primary"></span> Core Co-curricular Activities
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pl-0 sm:pl-10">
-              {getCategoryActivities(society.category).map((act, index) => (
-                <div key={index} className="p-4 border border-outline-variant hover:border-primary transition-colors bg-white">
-                  <span className="material-symbols-outlined text-primary mb-2 text-2xl">{catIcon}</span>
-                  <h5 className="font-body-md font-bold mb-1">{act.title}</h5>
-                  <p className="font-body-sm text-on-surface-variant">{act.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

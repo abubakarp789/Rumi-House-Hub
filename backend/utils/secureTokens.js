@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 
 const createQrCodeToken = () => `rumi_${crypto.randomBytes(24).toString('hex')}`;
+const createPassToken = () => `pass_${crypto.randomBytes(32).toString('hex')}`;
 
 const safeTokenEquals = (storedToken = '', providedToken = '') => {
   const stored = Buffer.from(String(storedToken));
@@ -14,6 +15,7 @@ const safeTokenEquals = (storedToken = '', providedToken = '') => {
 };
 
 module.exports = {
+  createPassToken,
   createQrCodeToken,
   safeTokenEquals
 };

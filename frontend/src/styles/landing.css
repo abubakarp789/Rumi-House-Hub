@@ -244,10 +244,11 @@ body:has(.public-shell)::before {
 /* Atrium Hero Section */
 .atrium-hero {
   position: relative;
+  overflow: hidden;
   padding: 72px 0 96px;
   background-image: 
     linear-gradient(90deg, #faf9f6 40%, rgba(250, 249, 246, 0.85) 55%, rgba(250, 249, 246, 0) 75%), 
-    url('../assets/landing/hero 3d componeent.png');
+    url('../assets/landing/namal-academic-block-display.jpg');
   background-size: cover;
   background-position: center right;
   background-repeat: no-repeat;
@@ -261,7 +262,21 @@ body:has(.public-shell)::before {
 }
 
 .atrium-hero__content {
+  position: relative;
+  z-index: 2;
   padding-right: 20px;
+}
+
+.atrium-hero__visual {
+  position: relative;
+  min-height: 520px;
+}
+
+.atrium-hero__visual .atrium-canvas {
+  position: absolute !important;
+  inset: -50px -80px -60px -40px;
+  width: calc(100% + 120px) !important;
+  height: calc(100% + 110px) !important;
 }
 
 .atrium-hero__purpose {
@@ -1111,7 +1126,7 @@ body:has(.public-shell)::before {
   }
 
   .atrium-hero__visual {
-    background-image: url('../assets/landing/hero 3d componeent.png');
+    background-image: url('../assets/landing/namal-academic-block-display.jpg');
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;

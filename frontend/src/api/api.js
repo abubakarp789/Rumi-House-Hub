@@ -35,11 +35,9 @@ async function request(method, path, body = null) {
       // JSON parsing failure fallback
     }
     
-    // Auto logout if the backend returns a 401 Unauthorized token check failure
-    if (response.status === 401) {
-      localStorage.removeItem('rumi_jwt_token');
-      window.location.href = '/login?expired=true';
-    }
+    // Let the caller (AuthContext) decide how to handle 401s.
+    // Don't redirect here — it conflicts with React Router and
+    // incorrectly treats login failures as expired sessions.
 
     throw new Error(errorMessage);
   }
@@ -114,8 +112,12 @@ export async function createEvent(payload) {
   return request('POST', '/events', payload);
 }
 
-export async function updateEventStatus(id, status) {
-  return request('PATCH', `/events/${id}/status`, { status });
+export async function updateEventStatus(id, status, rejectionReason = '') {
+  const payload = { status };
+  if (rejectionReason) {
+    payload.rejectionReason = rejectionReason;
+  }
+  return request('PATCH', `/events/${id}/status`, payload);
 }
 
 export async function submitRsvp(id) {
@@ -129,8 +131,8 @@ export async function getEventQr(id) {
 /**
  * Attendance API Operations
  */
-export async function recordCheckIn(id, token) {
-  return request('POST', `/events/${id}/checkin`, { token });
+export async function recordOrganizerCheckIn(id, token) {
+  return request('POST', `/events/${id}/attendance/checkin`, { token });
 }
 
 export async function getEventAttendance(id) {
