@@ -7,8 +7,8 @@ import Footer from './Footer';
 it('renders authentic branding and valid public links', () => {
   render(<MemoryRouter><Footer /></MemoryRouter>);
   expect(screen.getByAltText('Rumi House Hub crest')).toBeVisible();
-  expect(screen.getByRole('link', { name: /Event Calendar/i })).toHaveAttribute('href', '/events');
-  expect(screen.getByRole('link', { name: /Society Directory/i })).toHaveAttribute('href', '/societies');
-  expect(screen.getByRole('link', { name: 'info@namal.edu.pk' })).toHaveAttribute('href', 'mailto:info@namal.edu.pk');
+  expect(screen.getAllByRole('link', { name: 'Events' })[0]).toHaveAttribute('href', '/events');
+  expect(screen.getAllByRole('link', { name: 'Societies' })[0]).toHaveAttribute('href', '/societies');
+  expect(screen.getByRole('link', { name: 'rumi.house@namal.edu.pk' })).toHaveAttribute('href', 'mailto:rumi.house@namal.edu.pk');
   expect(screen.getByText(new RegExp(String(new Date().getFullYear())))).toBeVisible();
 });

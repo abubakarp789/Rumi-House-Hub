@@ -53,7 +53,7 @@ export default function Navbar() {
       <div className="site-header__inner">
         <Link className="site-brand" to="/" aria-label="Rumi House Hub home">
           <img src={crestImage} alt="Rumi House Hub crest" />
-          <span><strong>Rumi House</strong><small>Namal University</small></span>
+          <span>Rumi House Hub</span>
         </Link>
 
         <nav className="site-nav" aria-label="Main Navigation">
@@ -61,10 +61,18 @@ export default function Navbar() {
         </nav>
 
         <div className="site-header__actions">
+          <div className="site-header__search">
+            <input type="text" placeholder="Search Portal..." aria-label="Search Portal" />
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </div>
+
           {user ? (
             <div className="site-account">
               <span className="site-account__avatar" title={`${user.name} (${user.role})`}>{initials}</span>
-              <button type="button" onClick={handleLogout}>Sign out</button>
+              <button type="button" onClick={handleLogout} className="site-header__signin">Sign out</button>
             </div>
           ) : (
             <Link className="site-header__signin" to="/login">Sign In</Link>

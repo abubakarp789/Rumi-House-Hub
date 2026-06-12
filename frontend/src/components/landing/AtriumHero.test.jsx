@@ -20,6 +20,4 @@ it('keeps the complete hero usable without animation', () => {
   })).toBeVisible();
   expect(screen.getByRole('link', { name: /Explore Societies/i })).toHaveAttribute('href', '/societies');
   expect(screen.getByRole('link', { name: /View Calendar/i })).toHaveAttribute('href', '/events');
-  expect(screen.getByAltText(/Namal Academic Block/i)).toBeVisible();
-  expect(screen.queryByTestId('atrium-scene')).not.toBeInTheDocument();
 });

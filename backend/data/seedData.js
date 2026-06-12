@@ -344,14 +344,6 @@ const seedDB = async () => {
         status: 'published'
       },
       {
-        title: "A Step Towards Sustainability | Plantation Drive 2026",
-        category: "visit",
-        summary: "In collaboration with the Namal Environmental Club, Rumi House successfully planted 500 indigenous saplings in the Salt Range.",
-        content: "Demonstrating our core value of sustainability and community action, students, staff, and faculty coordinators took part in the Green Namal Campaign. The drive focused on planting native species around Namal Lake to preserve regional biodiversity and combat soil erosion.",
-        publishedBy: adminUser._id,
-        status: 'published'
-      },
-      {
         title: "NUST NET (Series-4) Valid for Admission at Namal University",
         category: "alert",
         summary: "Great news for prospective engineering and computing students! Namal University will accept NUST NET Series-4 scores for undergraduate admissions.",

@@ -44,7 +44,7 @@ export default function EventCard({ event }) {
   const filledPercent = Math.min(100, Math.round((takenSeats / totalSeats) * 100));
 
   return (
-    <article className="bg-white border border-outline-variant/60 p-0 flex flex-col bento-card-premium shadow-tight justify-between h-full rounded-lg group">
+    <article className="atrium-card p-0 flex flex-col justify-between h-full group">
       <div>
         <div className="relative h-48 overflow-hidden">
           <img 
@@ -52,8 +52,8 @@ export default function EventCard({ event }) {
             className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700" 
             src={cardImage}
           />
-          <div className="absolute top-4 left-4 bg-white px-3 py-1.5 border border-outline-variant/60 shadow-sm rounded-sm">
-            <span className={`font-label-uppercase text-label-uppercase text-[9px] font-bold uppercase tracking-wider ${badgeColor}`}>
+          <div className="absolute top-4 left-4 shadow-sm">
+            <span className="atrium-badge px-3 py-1 text-[9px] font-bold uppercase tracking-wider">
               {type || 'General'}
             </span>
           </div>
@@ -62,38 +62,38 @@ export default function EventCard({ event }) {
         <div className="p-6 pb-0 text-left">
           <div className="flex justify-between items-start mb-4">
             <div className="flex items-center gap-3">
-              <span className="font-display-lg text-[38px] text-primary leading-none font-bold">
+              <span className="font-serif text-[38px] text-[var(--atrium-green)] leading-none font-bold" style={{ fontFamily: 'var(--font-display)' }}>
                 {dayStr}
               </span>
               <div className="flex flex-col">
-                <span className="font-label-uppercase text-label-uppercase text-[10px] text-on-surface-variant font-bold tracking-wider leading-none">
+                <span className="font-label-uppercase text-label-uppercase text-[10px] text-[#71887e] font-bold tracking-wider leading-none">
                   {monthStr}
                 </span>
-                <span className="font-body-sm text-[12px] text-on-surface-variant font-semibold mt-0.5 leading-none">
+                <span className="font-body-sm text-[12px] text-[#71887e] font-semibold mt-0.5 leading-none">
                   {yearStr}
                 </span>
               </div>
             </div>
-            <div className="bg-tertiary/10 border border-tertiary/20 px-3 py-1 rounded-full">
-              <span className="font-label-uppercase text-label-uppercase text-tertiary text-[9px] uppercase font-bold tracking-wide">
+            <div className="bg-[#b58a46]/10 border border-[#b58a46]/20 px-3 py-1 rounded-full">
+              <span className="font-label-uppercase text-label-uppercase text-[#b58a46] text-[9px] uppercase font-bold tracking-wide">
                 {status || 'Upcoming'}
               </span>
             </div>
           </div>
 
-          <h3 className="font-headline-sm text-headline-sm group-hover:text-primary transition-colors line-clamp-2">
+          <h3 className="atrium-card-title text-[1.35rem] font-semibold mb-2 group-hover:text-[var(--atrium-gold)] transition-colors duration-300 line-clamp-2">
             {title}
           </h3>
-          <p className="text-body-sm text-on-surface-variant font-semibold mt-1">
+          <p className="text-body-sm text-[#50665b] font-semibold mt-1">
             Host: {societyName}
           </p>
 
           <div className="flex flex-col gap-2 mt-4">
-            <div className="flex items-center gap-2 text-on-surface-variant">
+            <div className="flex items-center gap-2 text-[#50665b]">
               <span className="material-symbols-outlined text-sm">schedule</span>
               <span className="font-body-sm text-body-sm">{formattedTime}</span>
             </div>
-            <div className="flex items-center gap-2 text-on-surface-variant">
+            <div className="flex items-center gap-2 text-[#50665b]">
               <span className="material-symbols-outlined text-sm">location_on</span>
               <span className="font-body-sm text-body-sm truncate">{location}</span>
             </div>
@@ -103,18 +103,18 @@ export default function EventCard({ event }) {
 
       <div className="p-6 pt-0 text-left">
         <div className="flex flex-col gap-2 mt-6">
-          <div className="flex justify-between font-label-uppercase text-[9px] text-on-surface-variant font-semibold tracking-wider">
+          <div className="flex justify-between font-label-uppercase text-[9px] text-[#71887e] font-semibold tracking-wider">
             <span>Seats Reserved</span>
             <span>{takenSeats}/{totalSeats} Seats</span>
           </div>
-          <div className="w-full h-1.5 bg-surface-container rounded-full overflow-hidden border border-outline-variant/30">
-            <div className="h-full bg-gradient-to-r from-primary to-secondary" style={{ width: `${filledPercent}%` }}></div>
+          <div className="w-full h-1.5 bg-[#e5e9e7] rounded-full overflow-hidden border border-[#d2d9d6]">
+            <div className="h-full bg-gradient-to-r from-[var(--atrium-green)] to-[var(--atrium-gold)]" style={{ width: `${filledPercent}%` }}></div>
           </div>
         </div>
 
         <Link 
           to={`/events/${targetId}`} 
-          className="mt-6 w-full py-3 bg-primary text-white font-semibold hover:bg-primary-container hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2 rounded shadow-tight"
+          className="atrium-btn-primary w-full py-3 mt-6 flex items-center justify-center gap-2 rounded"
         >
           <span className="font-label-uppercase text-label-uppercase">DETAILS & RSVP</span>
           <span className="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>

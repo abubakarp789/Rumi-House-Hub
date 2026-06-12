@@ -46,9 +46,9 @@ describe('home content utilities', () => {
 
   it('keeps fallback events chronological', () => {
     expect(fallbackEvents.map((event) => event._id)).toEqual([
-      'fallback-sports-gala',
-      'fallback-blood-drive',
-      'fallback-ai-workshop'
+      'fallback-debate',
+      'fallback-clean-up',
+      'fallback-neural'
     ]);
   });
 });

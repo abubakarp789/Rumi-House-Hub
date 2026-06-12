@@ -1,47 +1,66 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import LandingSectionHeading from './LandingSectionHeading';
-import { formatTimeAgo } from '../../utils/homeContent';
+import { formatEventDate } from '../../utils/homeContent';
+
+function formatNewsDate(publishedAt) {
+  if (!publishedAt) return '';
+  try {
+    const dateObj = formatEventDate(publishedAt);
+    return `${dateObj.day} ${dateObj.month} ${dateObj.year}`;
+  } catch (err) {
+    return '';
+  }
+}
 
 export default function NewsEditorial({ news }) {
-  const [leadStory, ...briefs] = news;
-  if (!leadStory) return null;
+  // We only show the 3 news items from the user's design image
+  const displayNews = news.slice(0, 3);
 
   return (
     <section className="landing-section news-editorial" aria-labelledby="news-title">
       <div className="landing-container">
-        <div className="landing-section__topline">
-          <LandingSectionHeading
-            id="news-title"
-            eyebrow="From The Hub"
-            title="Ideas, milestones, and campus voices."
-            description="The stories shaping student life, collected from across the Rumi House community."
-          />
-          <Link className="landing-text-link" to="/news">View All News <span aria-hidden="true">↗</span></Link>
+        {/* Section Header */}
+        <div className="section-top-block">
+          <span className="section-number">03</span>
+          <div className="section-title-wrap">
+            <div className="section-heading-block">
+              <h2 id="news-title" className="section-title">Latest News</h2>
+              <p className="section-desc">
+                Stories, updates, and highlights from across the Namal community.
+              </p>
+            </div>
+            <Link className="landing-text-link" to="/news">
+              View All News <span aria-hidden="true">→</span>
+            </Link>
+          </div>
         </div>
 
-        <div className="news-editorial__layout">
-          <article className="news-lead">
-            <span className="news-editorial__index">01</span>
-            <div>
-              <span className="news-editorial__meta">{leadStory.category || 'Campus update'} · {formatTimeAgo(leadStory.publishedAt || leadStory.createdAt || leadStory.date)}</span>
-              <h3>{leadStory.title}</h3>
-              <p>{leadStory.summary || leadStory.description || leadStory.content}</p>
-              <Link to="/news">Read the story <span aria-hidden="true">↗</span></Link>
-            </div>
-          </article>
-          <div className="news-editorial__briefs">
-            {briefs.map((story, index) => (
-              <article className="news-brief" key={story._id || story.id || story.title}>
-                <span className="news-editorial__index">{String(index + 2).padStart(2, '0')}</span>
-                <div>
-                  <span className="news-editorial__meta">{story.category || 'Rumi House'} · {formatTimeAgo(story.publishedAt || story.createdAt || story.date)}</span>
-                  <h3>{story.title}</h3>
-                  <Link aria-label={`Read ${story.title}`} to="/news">Read more <span aria-hidden="true">→</span></Link>
+        {/* News Grid */}
+        <div className="news-editorial__grid" data-testid="news-grid">
+          {displayNews.map((item) => {
+            const category = item.category || 'News';
+            const dateString = formatNewsDate(item.publishedAt || item.createdAt || item.date);
+            return (
+              <article className="news-card" key={item._id || item.id || item.title}>
+                <div className="news-card__image-container">
+                  {item.image && (
+                    <img src={item.image} alt={item.title} loading="lazy" />
+                  )}
                 </div>
+                <div className="news-card__body">
+                  <span className="news-card__meta">{category} · {dateString}</span>
+                  <h3 className="news-card__title">{item.title}</h3>
+                  <p className="news-card__desc">{item.summary || item.description || item.content}</p>
+                </div>
+                <Link 
+                  className="stretched-link" 
+                  aria-label={`Read story: ${item.title}`} 
+                  to="/news"
+                  style={{ position: 'absolute', inset: 0, zIndex: 1, opacity: 0 }}
+                />
               </article>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </div>
     </section>

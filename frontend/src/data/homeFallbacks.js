@@ -1,108 +1,110 @@
+import cleanupImg from '../assets/landing/news-cleanup.png';
+import poetryImg from '../assets/landing/news-poetry.png';
+import workshopImg from '../assets/landing/news-workshop.png';
+
 export const fallbackSocieties = [
   {
     _id: 'fallback-literary',
     isFallback: true,
     name: 'Namal Literary & Debating Society (LDS)',
     shortName: 'Literary & Debating',
-    categoryLabel: 'Literary pillar',
+    categoryLabel: 'Literary Pillar',
     description: 'A forum for critical inquiry, debate, poetry recitations, and literary evenings at Namal, keeping academic discourse and creative expression active.',
-    memberCount: 110
+    estYear: '2010',
+    number: '01'
   },
   {
     _id: 'fallback-computing',
     isFallback: true,
     name: 'Namal Computing Society (NCS)',
     shortName: 'Computing Society',
-    categoryLabel: 'Technology pillar',
-    description: 'Drives competitive coding championships, technical programming sprints, neural network workshops, and tech expos inside the Huawei Lab.'
+    categoryLabel: 'Technology Pillar',
+    description: 'Drives competitive coding championships, technical programming sprints, and neural network workshops.',
+    estYear: '2010',
+    number: '02'
   },
   {
     _id: 'fallback-media',
     isFallback: true,
     name: 'Namal Media Club (VoN)',
     shortName: 'Media Club',
-    categoryLabel: 'Media pillar',
-    description: 'Captures university events while teaching photography, filmmaking, editing, and visual storytelling.'
-  },
-  {
-    _id: 'fallback-social-impact',
-    isFallback: true,
-    name: 'Namal Society for Social Impact (NSSI)',
-    shortName: 'Social Impact',
-    categoryLabel: 'Community pillar',
-    description: 'Champions community welfare, blood donation drives, student support, and educational initiatives.'
+    categoryLabel: 'Media Pillar',
+    description: 'Captures and logs all university events, providing digital photography courses and editing news for the community.',
+    estYear: '2016',
+    number: '03'
   },
   {
     _id: 'fallback-sports',
     isFallback: true,
-    name: 'Namal Sports & Adventure Club (NSAC)',
-    shortName: 'Sports & Adventure',
-    categoryLabel: 'Wellness pillar',
-    description: 'Organizes athletics, cricket, football, badminton, adventure activities, and Sports Gala campaigns.'
+    name: 'Namal Sports & Wellness Society',
+    shortName: 'Sports & Wellness',
+    categoryLabel: 'Sports Pillar',
+    description: 'Promotes fitness, sportsmanship, and wellness through intra-society tournaments and training programs.',
+    estYear: '2012',
+    number: '05'
   }
 ];
 
 export const fallbackEvents = [
   {
-    _id: 'fallback-sports-gala',
+    _id: 'fallback-debate',
     isFallback: true,
-    title: 'Namal Sports Gala 2026',
-    location: 'Namal Sports Facility',
-    startDateTime: '2026-06-15T09:00:00+05:00',
-    description: 'House teams compete in athletics, cricket, football, and badminton near Namal Lake.',
+    title: 'Intra-Society Debate Championship',
+    location: 'Namal Auditorium',
+    startDateTime: '2025-06-24T10:00:00+05:00',
+    endDateTime: '2025-06-24T16:00:00+05:00',
+    description: 'Top speakers from across Namal societies compete in a day of ideas, argument, and leadership.',
+    category: 'FEATURED EVENT',
     status: 'approved'
   },
   {
-    _id: 'fallback-blood-drive',
+    _id: 'fallback-clean-up',
     isFallback: true,
-    title: 'Blood Donation Drive',
-    location: 'Academic Block',
-    startDateTime: '2026-06-18T10:00:00+05:00',
-    description: 'A voluntary blood donation drive with Sundas Foundation.',
+    title: 'Namal Clean-Up Drive',
+    location: 'Namal Lake',
+    startDateTime: '2025-06-18T09:00:00+05:00',
+    description: 'Students from multiple societies joined hands to clean and green key areas around campus and the lake.',
+    category: 'EVENTS',
     status: 'approved'
   },
   {
-    _id: 'fallback-ai-workshop',
+    _id: 'fallback-neural',
     isFallback: true,
-    title: 'NCS Generative AI Workshop',
+    title: 'NCS Workshop on Neural Networks',
     location: 'Huawei Lab',
-    startDateTime: '2026-06-22T14:30:00+05:00',
-    description: 'A hands-on workshop on language models, prompting, and agentic applications.',
+    startDateTime: '2025-06-12T14:30:00+05:00',
+    description: 'Hands-on session exploring the future of AI and deep learning with real-world applications.',
+    category: 'TECHNOLOGY',
     status: 'approved'
   }
 ];
 
 export const fallbackNews = [
   {
-    _id: 'fallback-convocation',
+    _id: 'fallback-clean-up-news',
     isFallback: true,
-    title: 'Namal University Convocation',
-    category: 'community',
-    summary: 'Celebrating the success, perseverance, and achievements of Namal graduates.',
-    publishedAt: '2026-05-28T10:00:00+05:00'
+    title: 'Namal Clean-Up Drive Creates a Greener Campus',
+    category: 'EVENTS',
+    summary: 'Students from multiple societies joined hands to clean and green key areas around campus and the lake.',
+    publishedAt: '2025-06-18T10:00:00+05:00',
+    image: cleanupImg
   },
   {
-    _id: 'fallback-admissions',
+    _id: 'fallback-poetry-news',
     isFallback: true,
-    title: 'Step Into Excellence | Admissions 2026',
-    category: 'admissions',
-    summary: 'Undergraduate admissions are open across computing, engineering, and business programs.',
-    publishedAt: '2026-05-20T10:00:00+05:00'
+    title: 'Reading Circle: Poetry Evening at Rumi Library',
+    category: 'ACADEMICS',
+    summary: 'An evening of powerful verses and meaningful conversations hosted by the Literary Society.',
+    publishedAt: '2025-06-15T10:00:00+05:00',
+    image: poetryImg
   },
   {
-    _id: 'fallback-plantation',
+    _id: 'fallback-neural-news',
     isFallback: true,
-    title: 'A Step Towards Sustainability',
-    category: 'community',
-    summary: 'Students planted 500 indigenous saplings in the Salt Range.',
-    publishedAt: '2026-03-30T10:00:00+05:00'
-  },
-  {
-    _id: 'fallback-net',
-    isFallback: true,
-    title: 'NUST NET Series-4 Accepted at Namal',
-    category: 'admissions',
-    summary: 'Namal University accepts NUST NET Series-4 scores for undergraduate admissions.',
-    publishedAt: '2026-03-05T10:00:00+05:00'
+    title: 'NCS Workshop on Neural Networks',
+    category: 'TECHNOLOGY',
+    summary: 'Hands-on session exploring the future of AI and deep learning with real-world applications.',
+    publishedAt: '2025-06-12T10:00:00+05:00',
+    image: workshopImg
   }
 ];
