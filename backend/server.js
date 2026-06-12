@@ -7,9 +7,6 @@ const { errorHandler } = require('./middleware/errorMiddleware');
 // Load environment variables from .env file
 dotenv.config();
 
-// Connect to MongoDB Atlas (or local fallback)
-connectDB();
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -60,10 +57,20 @@ app.use('/api', (req, res) => {
 // ----------------------------------------------------
 app.use(errorHandler);
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`=================================================`);
-  console.log(`Rumi House Hub MERN Server active on port ${PORT}`);
-  console.log(`Health Check: http://localhost:${PORT}/api/health`);
-  console.log(`=================================================`);
-});
+// Start only after database connectivity is established.
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log('=================================================');
+      console.log(`Rumi House Hub MERN Server active on port ${PORT}`);
+      console.log(`Health Check: http://localhost:${PORT}/api/health`);
+      console.log('=================================================');
+    });
+  } catch (error) {
+    console.error(`MongoDB Connection Error: ${error.message}`);
+    process.exit(1);
+  }
+};
+
+startServer();
