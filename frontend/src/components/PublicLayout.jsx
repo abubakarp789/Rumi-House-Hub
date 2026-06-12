@@ -5,12 +5,12 @@ import Footer from './Footer';
 
 export default function PublicLayout() {
   return (
-    <>
+    <div className="public-shell">
       <Navbar />
-      <main id="main-content" className="pt-20">
+      <main id="main-content" className="public-main">
         <Outlet />
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

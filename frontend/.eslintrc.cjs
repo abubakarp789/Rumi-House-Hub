@@ -42,6 +42,15 @@ module.exports = {
       rules: {
         'no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
       }
+    },
+    {
+      files: [
+        'src/components/landing/AtriumScene.jsx',
+        'src/components/landing/PortalModel.jsx'
+      ],
+      rules: {
+        'react/no-unknown-property': 'off'
+      }
     }
   ]
 };
