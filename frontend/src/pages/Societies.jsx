@@ -1,18 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import * as api from '../api/api';
 import SocietyCard from '../components/SocietyCard';
 import LoadingState from '../components/LoadingState';
 import EmptyState from '../components/EmptyState';
+import { AuthContext } from '../context/AuthContext';
 
 const CATEGORIES = ['All', 'Technical', 'Literary', 'Arts', 'Sports', 'Social'];
 
 export default function Societies() {
+  const { user } = useContext(AuthContext);
   const [societies, setSocieties] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const getDashboardLink = () => {
+    if (!user) return '/login';
+    if (user.role === 'admin') return '/admin?tab=dashboard';
+    if (user.role === 'executive') return '/executive?tab=dashboard';
+    return '/dashboard';
+  };
 
   useEffect(() => {
     async function loadSocieties() {
@@ -61,7 +70,7 @@ export default function Societies() {
             Registration Open
           </Link>
           <Link 
-            to="/dashboard" 
+            to={getDashboardLink()}
             className="atrium-btn-primary px-6 py-3 rounded text-center flex-1 md:flex-none"
           >
             My Societies

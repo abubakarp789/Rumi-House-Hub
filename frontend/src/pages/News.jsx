@@ -13,20 +13,21 @@ export default function News() {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    async function loadNews() {
-      try {
-        setLoading(true);
-        setError('');
-        const data = await api.getNews();
-        setNews(data);
-      } catch (err) {
-        console.error(err);
-        setError('Failed to retrieve bulletins from the MERN server.');
-      } finally {
-        setLoading(false);
-      }
+  async function loadNews() {
+    try {
+      setLoading(true);
+      setError('');
+      const data = await api.getNews();
+      setNews(data);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to retrieve bulletins from the MERN server.');
+    } finally {
+      setLoading(false);
     }
+  }
+
+  useEffect(() => {
     loadNews();
   }, []);
 
@@ -64,7 +65,7 @@ export default function News() {
         <EmptyState
           message="No seasonal news bulletins or publications are currently archived."
           actionLabel="Refresh News"
-          onAction={() => window.location.reload()}
+          onAction={loadNews}
         />
       ) : (
         <div className="space-y-16 mb-20">

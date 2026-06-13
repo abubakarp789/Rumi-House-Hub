@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import EmptyState from '../EmptyState';
 
 export default function RsvpsTab({ rsvps, qrPasses, handleLoadQr }) {
+  const navigate = useNavigate();
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="mb-6 border-b border-outline-variant/30 pb-4">
@@ -17,7 +18,7 @@ export default function RsvpsTab({ rsvps, qrPasses, handleLoadQr }) {
         <EmptyState
           message="You have no active co-curricular event passes registered."
           actionLabel="View Event Calendar"
-          onAction={() => { window.location.href = '/events'; }}
+          onAction={() => { navigate('/events'); }}
         />
       ) : (
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
