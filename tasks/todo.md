@@ -55,14 +55,14 @@
 
 ## Phase 6: Dead Code and Dead File Cleanup ✅
 - [x] Search and verify unused components, helper functions, and assets
-- [x] Reconnect approved landing page helpers (`AtriumScene.jsx`, `PortalModel.jsx`, `useReducedMotion.js`, `webgl.js`, `normalizeHomeContent()`)
+- [x] Standardize and clean up landing page helpers (useReducedMotion.js, normalizeHomeContent())
 - [x] Safely remove only confirmed dead selectors and files
 - [x] Report each deleted item with justification
 
 ## Phase 7: Performance Optimization ✅
 - [x] Optimize/compress heavy visual assets
 - [x] Implement route-level code splitting (`React.lazy`)
-- [x] Optimize lazy loading of heavy visual or 3D sections
+- [x] Optimize lazy loading and transition performance of the premium landing page
 - [x] Avoid duplicate API requests and unnecessary dashboard refetching
 
 ## Phase 8: Testing Expansion ✅
