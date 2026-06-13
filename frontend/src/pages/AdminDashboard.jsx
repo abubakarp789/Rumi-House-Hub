@@ -210,6 +210,20 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleNewsDelete = async (newsId) => {
+    try {
+      setNewsSuccess('');
+      setNewsError('');
+      await api.deleteNews(newsId);
+      setNewsSuccess('News article deleted successfully!');
+      loadAdminChecklists();
+      setTimeout(() => setNewsSuccess(''), 2500);
+    } catch (err) {
+      console.error(err);
+      setNewsError(err.message || 'Failed to delete news article.');
+    }
+  };
+
   const handleRoleChange = async (userId, newRole) => {
     setRoleSuccess('');
     setRoleLoading(true);
@@ -466,6 +480,7 @@ export default function AdminDashboard() {
             newsError={newsError} 
             newsSubmitting={newsSubmitting} 
             handleNewsSubmit={handleNewsSubmit} 
+            handleNewsDelete={handleNewsDelete}
           />
         )}
 

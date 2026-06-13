@@ -217,4 +217,54 @@ const getEventQr = async (req, res, next) => {
   }
 };
 
-module.exports = { createEventProposal, getEventById, getEventQr, getEvents, rsvpEvent, updateEventStatus };
+// @desc    Delete an event proposal (Admin or Creator Executive only)
+// @route   DELETE /api/events/:id
+// @access  Private
+const deleteEvent = async (req, res, next) => {
+  try {
+    const event = await Event.findById(req.params.id);
+    if (!event) {
+      return res.status(404).json({ error: 'Not Found', message: 'Event not found.' });
+    }
+
+    // Access policy check
+    if (!canManageEvent(req.user, event)) {
+      return res.status(403).json({ error: 'Forbidden', message: 'You are not authorized to delete this event.' });
+    }
+
+    // Executive constraint: cannot delete approved/past events
+    if (req.user.role === 'executive' && ['approved', 'past'].includes(event.status)) {
+      return res.status(400).json({
+        error: 'Validation Error',
+        message: 'Executives cannot delete events that have already been approved or have passed.'
+      });
+    }
+
+    // Clean up cascade: delete all associated RSVPs and Attendance
+    await RSVP.deleteMany({ eventId: event._id });
+    await Attendance.deleteMany({ eventId: event._id });
+
+    // Delete the event
+    await Event.findByIdAndDelete(event._id);
+
+    return res.json({
+      success: true,
+      message: 'Event proposal and all associated reservation records deleted successfully.'
+    });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(404).json({ error: 'Not Found', message: 'Event not found. Invalid ID format.' });
+    }
+    return next(error);
+  }
+};
+
+module.exports = { 
+  createEventProposal, 
+  getEventById, 
+  getEventQr, 
+  getEvents, 
+  rsvpEvent, 
+  updateEventStatus,
+  deleteEvent
+};

@@ -80,8 +80,35 @@ const createNews = async (req, res, next) => {
   }
 };
 
+// @desc    Delete a news article (Admin only)
+// @route   DELETE /api/news/:id
+// @access  Private/Admin
+const deleteNews = async (req, res, next) => {
+  try {
+    const article = await News.findByIdAndDelete(req.params.id);
+    
+    if (!article) {
+      return res.status(404).json({
+        error: 'Not Found',
+        message: `News article with ID ${req.params.id} does not exist.`
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'News article deleted successfully!'
+    });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(404).json({ error: 'Not Found', message: 'Article not found. Invalid ID format.' });
+    }
+    next(error);
+  }
+};
+
 module.exports = {
   getNews,
   getNewsById,
-  createNews
+  createNews,
+  deleteNews
 };

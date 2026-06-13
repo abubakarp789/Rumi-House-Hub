@@ -128,6 +128,10 @@ export async function getEventQr(id) {
   return request('GET', `/events/${id}/qr`);
 }
 
+export async function deleteEvent(id) {
+  return request('DELETE', `/events/${id}`);
+}
+
 /**
  * Attendance API Operations
  */
@@ -152,4 +156,8 @@ export async function getNewsById(id) {
 
 export async function createNews(payload) {
   return request('POST', '/news', payload);
+}
+
+export async function deleteNews(id) {
+  return request('DELETE', `/news/${id}`);
 }

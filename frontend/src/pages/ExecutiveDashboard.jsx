@@ -227,9 +227,20 @@ export default function ExecutiveDashboard() {
       setAttendanceList(updatedList);
     } catch (err) {
       console.error(err);
-      setVerifyError(err.message || 'Check-in entry passcode verification failed.');
+      setError(err.message || 'Check-in entry passcode verification failed.');
     } finally {
       setVerifying(false);
+    }
+  };
+
+  const handleDeleteEvent = async (eventId) => {
+    try {
+      setError('');
+      await api.deleteEvent(eventId);
+      setEvents((prev) => prev.filter((event) => event._id !== eventId));
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'Failed to delete event proposal.');
     }
   };
 
@@ -383,6 +394,7 @@ export default function ExecutiveDashboard() {
             events={events} 
             setActiveTab={setActiveTab} 
             handleLoadAttendance={handleLoadAttendance} 
+            handleDeleteEvent={handleDeleteEvent}
           />
         )}
 

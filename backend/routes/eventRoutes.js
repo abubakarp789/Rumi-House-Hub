@@ -6,7 +6,8 @@ const {
   createEventProposal, 
   updateEventStatus, 
   rsvpEvent, 
-  getEventQr 
+  getEventQr,
+  deleteEvent
 } = require('../controllers/eventController');
 const { optionalProtect, protect } = require('../middleware/authMiddleware');
 const { authorizeRoles } = require('../middleware/roleMiddleware');
@@ -26,5 +27,8 @@ router.post('/:id/rsvp', protect, authorizeRoles('student'), rsvpEvent);
 
 // Protected dynamic event QR generation pass
 router.get('/:id/qr', protect, authorizeRoles('student'), getEventQr);
+
+// Delete event proposal (executive or admin)
+router.delete('/:id', protect, authorizeRoles('executive', 'admin'), deleteEvent);
 
 module.exports = router;

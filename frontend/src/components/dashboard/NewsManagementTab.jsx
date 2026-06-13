@@ -11,7 +11,8 @@ export default function NewsManagementTab({
   newsSuccess,
   newsError,
   newsSubmitting,
-  handleNewsSubmit
+  handleNewsSubmit,
+  handleNewsDelete
 }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in">
@@ -61,15 +62,28 @@ export default function NewsManagementTab({
                           {new Date(n.createdAt).toLocaleDateString()} • Published by Admin
                         </p>
                       </div>
-                      <span className={`px-2.5 py-0.5 text-[9px] font-bold rounded uppercase tracking-wider whitespace-nowrap border ${
-                        isAlert 
-                          ? 'bg-red-50 text-red-700 border-red-100' 
-                          : isVisit 
-                          ? 'bg-amber-50 text-amber-800 border-amber-100' 
-                          : 'bg-emerald-50 text-emerald-800 border-emerald-100'
-                      }`}>
-                        {n.category}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className={`px-2.5 py-0.5 text-[9px] font-bold rounded uppercase tracking-wider whitespace-nowrap border ${
+                          isAlert 
+                            ? 'bg-red-50 text-red-700 border-red-100' 
+                            : isVisit 
+                            ? 'bg-amber-50 text-amber-800 border-amber-100' 
+                            : 'bg-emerald-50 text-emerald-800 border-emerald-100'
+                        }`}>
+                          {n.category}
+                        </span>
+                        <button 
+                          onClick={() => {
+                            if (window.confirm("Are you sure you want to permanently delete this bulletin?")) {
+                              handleNewsDelete(n._id);
+                            }
+                          }}
+                          className="text-slate-400 hover:text-red-600 transition-colors p-1 flex items-center justify-center rounded hover:bg-red-50"
+                          title="Delete Bulletin"
+                        >
+                          <span className="material-symbols-outlined text-sm">delete</span>
+                        </button>
+                      </div>
                     </div>
                     
                     <p className="text-xs text-emerald-900 font-bold bg-emerald-50/50 p-2.5 rounded border-l-2 border-emerald-700">
