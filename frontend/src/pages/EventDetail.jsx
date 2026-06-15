@@ -69,7 +69,7 @@ export default function EventDetail() {
 
   if (loading) {
     return (
-      <div className="max-w-container-max mx-auto px-margin-desktop py-20 animate-pulse">
+      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-20 animate-pulse">
         <div className="h-10 bg-surface-container-high w-1/3 mb-6 rounded"></div>
         <div className="h-80 bg-surface-container-high w-full mb-12 rounded"></div>
       </div>
@@ -95,7 +95,7 @@ export default function EventDetail() {
   const societyName = event.societyId && typeof event.societyId === 'object' ? event.societyId.name : 'Rumi Club';
 
   const typeLower = event.type ? event.type.toLowerCase() + 's' : 'default';
-  const bannerImage = EVENT_IMAGES[typeLower] || EVENT_IMAGES.default;
+  const bannerImage = event.imageUrl || EVENT_IMAGES[typeLower] || EVENT_IMAGES.default;
 
   const dateObj = event.startDateTime ? new Date(event.startDateTime) : null;
   const formattedDate = dateObj
@@ -108,7 +108,7 @@ export default function EventDetail() {
   return (
     <div className="min-h-screen relative overflow-hidden pt-10">
       {/* Back navigation header */}
-      <div className="max-w-container-max mx-auto px-margin-desktop mb-6 flex items-center gap-4">
+      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-6 flex items-center gap-4">
         <button 
           onClick={() => navigate('/events')} 
           className="w-10 h-10 flex items-center justify-center border border-outline-variant rounded bg-white hover:bg-surface-container-low transition-colors"
@@ -161,9 +161,9 @@ export default function EventDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
           {/* Main info pane */}
           <div className="lg:col-span-8 space-y-12">
-            <div className="w-full h-96 bg-surface-container overflow-hidden rounded-lg border border-outline-variant group">
+            <div className={`w-full bg-surface-container overflow-hidden rounded-lg border border-outline-variant group ${event.imageUrl ? 'h-auto' : 'h-96'}`}>
               <img 
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                className={`w-full transition-transform duration-700 group-hover:scale-105 ${event.imageUrl ? 'h-auto block' : 'h-full object-cover'}`} 
                 src={bannerImage} 
                 alt={event.title} 
               />

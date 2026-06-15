@@ -37,7 +37,7 @@ export default function News() {
   };
 
   return (
-    <div className="p-margin-desktop max-w-container-max mx-auto w-full pt-10">
+    <div className="p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full pt-10">
       {/* Editorial Header */}
       <section className="mb-12 text-left animate-fade-in-up">
         <span className="atrium-eyebrow mb-4 block">
@@ -69,100 +69,55 @@ export default function News() {
         />
       ) : (
         <div className="space-y-16 mb-20">
-          {/* Spotlight Grid (Featured + Sidebar News Stack) */}
-          <div className="grid grid-cols-12 gap-gutter">
-            {/* Featured Spotlight Card (Left) */}
-            <article 
-              className="col-span-12 lg:col-span-8 grid grid-cols-1 md:grid-cols-2 atrium-card group cursor-pointer animate-fade-in-up animate-delay-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--atrium-gold)]"
-              onClick={() => handleOpenArticle(news[0])}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handleOpenArticle(news[0]);
-                }
-              }}
-            >
-              <div className="h-64 md:h-auto relative bg-[#e5e9e7] overflow-hidden">
-                <img 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" 
-                  alt={news[0].title}
-                  src={academicImg}
-                />
-                <div className="absolute top-4 left-4 shadow-sm">
-                  <span className="atrium-badge px-3 py-1 text-[9px] font-bold uppercase tracking-wider">
-                    {news[0].category}
-                  </span>
-                </div>
-              </div>
-              <div className="p-8 flex flex-col justify-center text-left bg-gradient-to-br from-white to-surface-warm/20">
-                <span className="atrium-eyebrow text-[10px] block mb-4">
+          {/* Featured Spotlight Card (Full Width) */}
+          <article 
+            className="w-full atrium-card flex flex-col group cursor-pointer animate-fade-in-up animate-delay-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--atrium-gold)] mb-12"
+            onClick={() => handleOpenArticle(news[0])}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleOpenArticle(news[0]);
+              }
+            }}
+          >
+            <div className={`relative bg-[#e5e9e7] overflow-hidden rounded-t-lg ${news[0].imageUrl ? 'h-auto' : 'h-80'}`}>
+              <img 
+                className={`w-full transition-transform duration-700 group-hover:scale-[1.01] ${news[0].imageUrl ? 'h-auto block' : 'h-full object-cover'}`} 
+                alt={news[0].title}
+                src={news[0].imageUrl || news[0].image || academicImg}
+              />
+            </div>
+            <div className="p-8 flex flex-col justify-center text-left bg-gradient-to-br from-white to-surface-warm/20 rounded-b-lg">
+              <div className="flex justify-between items-center mb-4">
+                <span className="atrium-eyebrow text-[10px] block">
                   Featured Bulletin
                 </span>
-                <h3 className="atrium-card-title text-[1.4rem] mb-6 font-semibold leading-tight group-hover:text-[var(--atrium-gold)] transition-colors duration-300">
-                  {news[0].title}
-                </h3>
-                <p className="text-[#50665b] font-body-sm mb-6 leading-relaxed line-clamp-3">
-                  {news[0].summary}
-                </p>
-                <span className="text-[var(--atrium-green)] hover:text-[var(--atrium-gold)] font-bold self-start border-0 bg-transparent font-label-uppercase text-label-uppercase text-xs tracking-wider flex items-center gap-1 transition-colors duration-200">
-                  Read full report <span className="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+                <span className="atrium-badge px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider">
+                  {news[0].category}
                 </span>
               </div>
-            </article>
-
-            {/* Sidebar News Stack (Right) */}
-            <div className="col-span-12 lg:col-span-4 flex flex-col gap-6 animate-fade-in-up animate-delay-200">
-              {news.slice(1, 4).map((item, idx) => {
-                const borderClass = idx % 2 === 0 ? 'border-l-[var(--atrium-green)]' : 'border-l-[var(--atrium-gold)]';
-                return (
-                  <article 
-                    key={item._id} 
-                    className={`atrium-card border-l-4 ${borderClass} p-6 flex flex-col justify-between text-left group cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--atrium-gold)]`}
-                    onClick={() => handleOpenArticle(item)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        handleOpenArticle(item);
-                      }
-                    }}
-                  >
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-[10px] font-bold text-[#71887e] font-mono">
-                          {new Date(item.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                        </span>
-                        <span className="atrium-badge px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">
-                          {item.category}
-                        </span>
-                      </div>
-                      <h4 className="atrium-card-title text-[1.1rem] font-semibold mb-2 line-clamp-2 leading-snug group-hover:text-[var(--atrium-gold)] transition-colors duration-300">
-                        {item.title}
-                      </h4>
-                      <p className="text-body-sm text-[#50665b] line-clamp-2 leading-relaxed">
-                        {item.summary}
-                      </p>
-                    </div>
-                    <span className="text-xs text-[var(--atrium-green)] hover:text-[var(--atrium-gold)] font-bold self-start mt-4 border-0 bg-transparent font-label-uppercase text-label-uppercase tracking-wider flex items-center gap-1 transition-colors duration-200">
-                      Read bulletin <span className="material-symbols-outlined text-xs transition-transform group-hover:translate-x-1">arrow_forward</span>
-                    </span>
-                  </article>
-                );
-              })}
+              <h3 className="atrium-card-title text-[1.8rem] mb-4 font-semibold leading-tight group-hover:text-[var(--atrium-gold)] transition-colors duration-300">
+                {news[0].title}
+              </h3>
+              <p className="text-[#50665b] font-body-sm mb-6 leading-relaxed">
+                {news[0].summary}
+              </p>
+              <span className="text-[var(--atrium-green)] hover:text-[var(--atrium-gold)] font-bold self-start border-0 bg-transparent font-label-uppercase text-label-uppercase text-xs tracking-wider flex items-center gap-1 transition-colors duration-200">
+                Read full report <span className="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+              </span>
             </div>
-          </div>
+          </article>
 
           {/* Remaining Bulletins in Bento Grid Layout */}
-          {news.length > 4 && (
+          {news.length > 1 && (
             <div className="space-y-6 pt-8 border-t border-[#e5e9e7]">
               <h3 className="atrium-h2 text-[1.8rem] font-semibold text-left">
                 Journal Archives
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {news.slice(4).map((item) => (
+                {news.slice(1).map((item) => (
                   <NewsCard
                     key={item._id}
                     newsItem={item}

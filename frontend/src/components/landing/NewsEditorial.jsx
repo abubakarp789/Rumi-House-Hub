@@ -42,9 +42,14 @@ export default function NewsEditorial({ news }) {
             const dateString = formatNewsDate(item.publishedAt || item.createdAt || item.date);
             return (
               <article className="news-card" key={item._id || item.id || item.title}>
-                <div className="news-card__image-container">
-                  {item.image && (
-                    <img src={item.image} alt={item.title} loading="lazy" />
+                <div className={`overflow-hidden relative ${item.imageUrl ? 'h-auto' : 'news-card__image-container'}`}>
+                  {(item.imageUrl || item.image) && (
+                    <img 
+                      className={`w-full transition-transform duration-1000 ${item.imageUrl ? 'h-auto block' : 'h-full object-cover'}`} 
+                      src={item.imageUrl || item.image} 
+                      alt={item.title} 
+                      loading="lazy" 
+                    />
                   )}
                 </div>
                 <div className="news-card__body">

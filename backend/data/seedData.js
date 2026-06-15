@@ -76,58 +76,14 @@ const seedDB = async () => {
     console.log('🏢 Seeding societies directory...');
     const societiesData = [
       {
-        name: "Rumi Debating Club",
-        category: "literary",
-        description: "Fosters public speaking, structured argument development, and eloquence among house members through regular internal debates and regional simulations.",
-        patronName: "Faculty Patron",
-        facultyCoordinator: "Society Coordinator",
-        executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 42
-      },
-      {
-        name: "Rumi Art & Calligraphy Club",
-        category: "arts",
-        description: "Nurtures artistic expression, classical calligraphy skills, and hands-on visual arts projects to represent the house in design challenges.",
-        patronName: "Faculty Patron",
-        facultyCoordinator: "Society Coordinator",
-        executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 31
-      },
-      {
-        name: "Rumi Reading Club",
-        category: "literary",
-        description: "Creates a community of readers dedicated to deep textual analysis, weekly book reviews, and intellectual group discussions on classic literature.",
-        patronName: "Faculty Patron",
-        facultyCoordinator: "Society Coordinator",
-        executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 27
-      },
-      {
-        name: "Rumi Décor Club",
-        category: "arts",
-        description: "Enlivens the living spaces and community lobbies of Rumi House, executing creative interior designs and setting up layouts for all our house events.",
-        patronName: "Faculty Patron",
-        facultyCoordinator: "Society Coordinator",
-        executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 24
-      },
-      {
-        name: "Rumi Writing Club",
-        category: "literary",
-        description: "Empowers aspiring writers, essayists, and poets within Rumi House, conducting collaborative peer reviews, workshops, and publishing our house newsletter.",
-        patronName: "Faculty Patron",
-        facultyCoordinator: "Society Coordinator",
-        executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 35
-      },
-      {
         name: "Namal Environmental Club (NEC)",
         category: "social",
         description: "Preserves the Green Namal vision by conducting plantation drives, green recycling initiatives, campus clean-ups, and environmental awareness seminars in the Salt Range.",
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 85
+        memberCount: 85,
+        imageUrl: "/societies/nec_banner.png"
       },
       {
         name: "Namal Idea Club (NIC)",
@@ -136,7 +92,8 @@ const seedDB = async () => {
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 73
+        memberCount: 73,
+        imageUrl: "/societies/nic_banner.png"
       },
       {
         name: "Namal Society for Social Impact (NSSI)",
@@ -145,7 +102,8 @@ const seedDB = async () => {
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 94
+        memberCount: 94,
+        imageUrl: "/societies/nssi_banner.png"
       },
       {
         name: "Namal Literary & Debating Society (LDS)",
@@ -154,7 +112,8 @@ const seedDB = async () => {
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 110
+        memberCount: 110,
+        imageUrl: "/societies/lds_banner.png"
       },
       {
         name: "Namal Sports & Adventure Club (NSAC)",
@@ -163,7 +122,8 @@ const seedDB = async () => {
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 150
+        memberCount: 150,
+        imageUrl: "/societies/nsac_banner.png"
       },
       {
         name: "Namal Dramatic Club (NDC)",
@@ -172,7 +132,8 @@ const seedDB = async () => {
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 58
+        memberCount: 58,
+        imageUrl: "/societies/ndc_banner.png"
       },
       {
         name: "Namal Media Club (VoN)",
@@ -181,7 +142,8 @@ const seedDB = async () => {
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 48
+        memberCount: 48,
+        imageUrl: "/societies/von_banner.png"
       },
       {
         name: "Skills Development Society (SDS)",
@@ -190,7 +152,8 @@ const seedDB = async () => {
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 65
+        memberCount: 65,
+        imageUrl: "/societies/sds_banner.png"
       },
       {
         name: "Open Source Society (OSS)",
@@ -199,7 +162,8 @@ const seedDB = async () => {
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 52
+        memberCount: 52,
+        imageUrl: "/societies/oss_banner.png"
       },
       {
         name: "Namal Computing Society (NCS)",
@@ -208,7 +172,8 @@ const seedDB = async () => {
         patronName: "Faculty Patron",
         facultyCoordinator: "Society Coordinator",
         executiveBody: [{ userId: executiveUser._id, position: "Executive Lead" }],
-        memberCount: 80
+        memberCount: 80,
+        imageUrl: "/societies/ncs_banner.png"
       }
     ];
 
@@ -236,7 +201,8 @@ const seedDB = async () => {
         registered: 1, // Will seed studentUser RSVP
         description: "The premier athletic league of Namal University where house teams compete fiercely in athletics, cricket, football, and badminton near Namal Lake.",
         qrCodeToken: "rumi_secure_token_sports_gala_101",
-        createdBy: executiveUser._id
+        createdBy: executiveUser._id,
+        imageUrl: "/events/sports_gala_2026.png"
       },
       {
         societyId: findSocietyId("Namal Society for Social Impact (NSSI)"),
@@ -250,7 +216,8 @@ const seedDB = async () => {
         registered: 0,
         description: "Namal Society for Social Impact in collaboration with Sundas Foundation is organizing a voluntary blood donation drive. Come forward and save a life!",
         qrCodeToken: "rumi_secure_token_blood_drive_102",
-        createdBy: executiveUser._id
+        createdBy: executiveUser._id,
+        imageUrl: "/events/blood_drive.png"
       },
       {
         societyId: findSocietyId("Namal Idea Club (NIC)"),
@@ -264,7 +231,8 @@ const seedDB = async () => {
         registered: 0,
         description: "Showcase your entrepreneurial ideas and creative startups. Compete for seed funding, pitch in front of industry leaders, and win attractive cash prizes at the annual expo.",
         qrCodeToken: "rumi_secure_token_ideathon_103",
-        createdBy: executiveUser._id
+        createdBy: executiveUser._id,
+        imageUrl: "/events/ideathon_2026.png"
       },
       {
         societyId: findSocietyId("Namal Computing Society (NCS)"),
@@ -278,7 +246,8 @@ const seedDB = async () => {
         registered: 0,
         description: "A comprehensive, hands-on workshop on Large Language Models, prompt engineering, and building agentic AI applications inside the Huawei Lab.",
         qrCodeToken: "rumi_secure_token_ai_workshop_104",
-        createdBy: executiveUser._id
+        createdBy: executiveUser._id,
+        imageUrl: "/events/ai_workshop.png"
       },
       {
         societyId: findSocietyId("Namal Computing Society (NCS)"),
@@ -292,7 +261,8 @@ const seedDB = async () => {
         registered: 0,
         description: "Challenge your analytical capabilities in Namal's signature mathematics carnival featuring speed math, logic puzzles, and team quizzes.",
         qrCodeToken: "rumi_secure_token_math_carnival_105",
-        createdBy: executiveUser._id
+        createdBy: executiveUser._id,
+        imageUrl: "/events/math_carnival.png"
       },
       {
         societyId: findSocietyId("Namal Sports & Adventure Club (NSAC)"),
@@ -306,7 +276,8 @@ const seedDB = async () => {
         registered: 0,
         description: "Rumi House and other houses clash on the football pitch for the prestigious inter-house championship shield. Register as a player or join to support your house!",
         qrCodeToken: "rumi_secure_token_football_106",
-        createdBy: executiveUser._id
+        createdBy: executiveUser._id,
+        imageUrl: "/events/football_tournament.png"
       }
     ];
 
@@ -333,7 +304,8 @@ const seedDB = async () => {
         summary: "Celebrating the success, perseverance, and achievements of our graduates at the 11th Convocation Ceremony of Namal University.",
         content: "Namal University held its landmark Convocation ceremony, awarding degrees to the graduating Class of 2023. Families, faculty, and distinguished guests gathered at the Mianwali campus to witness the crowning achievements of our talented scholars, engineers, and future business leaders.",
         publishedBy: adminUser._id,
-        status: 'published'
+        status: 'published',
+        imageUrl: "/news/convocation_2023.png"
       },
       {
         title: "Step Into Excellence | Admissions 2026",
@@ -341,7 +313,8 @@ const seedDB = async () => {
         summary: "Namal University's undergraduate admissions are officially open. Apply online for BS Computer Science, BS Software Engineering, BS EE, and BBA programs.",
         content: "Become part of Pakistan's premier rural development initiative and high-tech academic landscape. Admissions for Fall 2026 are now open. With over 90% of students receiving financial support or scholarships, Namal remains committed to bringing world-class education within reach.",
         publishedBy: adminUser._id,
-        status: 'published'
+        status: 'published',
+        imageUrl: "/news/admissions_2026.png"
       },
       {
         title: "NUST NET (Series-4) Valid for Admission at Namal University",
@@ -349,7 +322,8 @@ const seedDB = async () => {
         summary: "Great news for prospective engineering and computing students! Namal University will accept NUST NET Series-4 scores for undergraduate admissions.",
         content: "To facilitate prospective students from across Pakistan, Namal University is pleased to announce that candidates with valid NUST NET Series-4 test scores can directly apply for admission into our BS CS, BS SE, and BS EE programs for Fall 2026. Submit your scores through the online admission portal before the deadline.",
         publishedBy: adminUser._id,
-        status: 'published'
+        status: 'published',
+        imageUrl: "/news/net_admission.png"
       },
       {
         title: "Embracing the Spirit of Ramzan | Ehtram-e-Ramzan",
@@ -357,7 +331,8 @@ const seedDB = async () => {
         summary: "Namal Society for Social Impact hosted a campus-wide Iftar for local community members and campus support staff.",
         content: "In the true spirit of empathy and inclusivity, the Namal community gathered for a grand Iftar hosted by student volunteers. The event fostered dialogue, shared blessings, and recognized the contributions of our dedicated administrative and security staff.",
         publishedBy: adminUser._id,
-        status: 'published'
+        status: 'published',
+        imageUrl: "/news/ramzan_iftar.png"
       }
     ];
 

@@ -23,12 +23,12 @@ const CATEGORY_COLORS = {
 };
 
 export default function EventCard({ event }) {
-  const { id, _id, title, startDateTime, location, status, type, societyId, capacity, registered } = event;
+  const { id, _id, title, startDateTime, location, status, type, societyId, capacity, registered, imageUrl } = event;
   const targetId = _id || id;
   const societyName = societyId && typeof societyId === 'object' ? societyId.name : 'Rumi House Society';
 
   const typeLower = type ? type.toLowerCase() + 's' : 'default';
-  const cardImage = EVENT_IMAGES[typeLower] || EVENT_IMAGES.default;
+  const cardImage = imageUrl || EVENT_IMAGES[typeLower] || EVENT_IMAGES.default;
   const badgeColor = CATEGORY_COLORS[typeLower] || CATEGORY_COLORS.default;
 
   const dateObj = startDateTime ? new Date(startDateTime) : null;
@@ -48,20 +48,17 @@ export default function EventCard({ event }) {
   const takenSeats = registered || 0;
   const filledPercent = totalSeats ? Math.min(100, Math.round((takenSeats / totalSeats) * 100)) : 0;
 
+  const hasCustomImage = !!imageUrl;
+
   return (
     <article className="atrium-card p-0 flex flex-col justify-between h-full group">
       <div>
-        <div className="relative h-48 overflow-hidden">
+        <div className={`relative overflow-hidden ${hasCustomImage ? 'h-auto' : 'h-48'}`}>
           <img 
             alt={title} 
-            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700" 
+            className={`w-full transition-transform duration-700 group-hover:scale-[1.03] ${hasCustomImage ? 'h-auto block' : 'h-full object-cover'}`} 
             src={cardImage}
           />
-          <div className="absolute top-4 left-4 shadow-sm">
-            <span className="atrium-badge px-3 py-1 text-[9px] font-bold uppercase tracking-wider">
-              {type || 'General'}
-            </span>
-          </div>
         </div>
 
         <div className="p-6 pb-0 text-left">
@@ -79,10 +76,15 @@ export default function EventCard({ event }) {
                 </span>
               </div>
             </div>
-            <div className="bg-[#b58a46]/10 border border-[#b58a46]/20 px-3 py-1 rounded-full">
-              <span className="font-label-uppercase text-label-uppercase text-[#b58a46] text-[9px] uppercase font-bold tracking-wide">
-                {status || 'Upcoming'}
+            <div className="flex items-center gap-2">
+              <span className="atrium-badge px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider">
+                {type || 'General'}
               </span>
+              <div className="bg-[#b58a46]/10 border border-[#b58a46]/20 px-3 py-1 rounded-full">
+                <span className="font-label-uppercase text-label-uppercase text-[#b58a46] text-[9px] uppercase font-bold tracking-wide">
+                  {status || 'Upcoming'}
+                </span>
+              </div>
             </div>
           </div>
 

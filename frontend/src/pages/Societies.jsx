@@ -52,7 +52,7 @@ export default function Societies() {
   };
 
   return (
-    <div className="p-margin-desktop max-w-container-max mx-auto w-full pt-10">
+    <div className="p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full pt-10">
       {/* Hero Header Section */}
       <section className="mb-12 flex flex-col md:flex-row justify-between items-end gap-gutter animate-fade-in-up">
         <div className="max-w-2xl text-left">

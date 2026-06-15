@@ -65,7 +65,7 @@ export default function EventsFeature({ events }) {
         {/* Right Column (Featured Event Card) */}
         <div className="events-feature__right">
           <img 
-            src={featuredEvent.image || courtyardImage} 
+            src={featuredEvent.imageUrl || featuredEvent.image || courtyardImage} 
             alt="Namal University courtyard and main building" 
             className="events-feature__img"
           />

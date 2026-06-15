@@ -38,7 +38,7 @@ export default function Events() {
   }, [activeTab]);
 
   return (
-    <div className="p-margin-desktop max-w-container-max mx-auto w-full pt-10">
+    <div className="p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full pt-10">
       {/* Editorial Hero / Page Header */}
       <section className="grid grid-cols-12 gap-gutter mb-12 items-end animate-fade-in-up">
         <div className="col-span-12 lg:col-span-8 flex flex-col gap-4 text-left">

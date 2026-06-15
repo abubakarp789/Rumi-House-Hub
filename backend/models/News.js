@@ -39,6 +39,10 @@ const NewsSchema = new mongoose.Schema({
   publishedAt: { 
     type: Date, 
     default: Date.now 
+  },
+  imageUrl: {
+    type: String,
+    trim: true
   }
 }, { timestamps: true });
 

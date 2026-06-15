@@ -89,7 +89,7 @@ export default function SocietyDetail() {
 
   if (loading) {
     return (
-      <div className="max-w-container-max mx-auto px-margin-desktop py-20 animate-pulse">
+      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-20 animate-pulse">
         <div className="h-10 bg-surface-container-high w-1/3 mb-6 rounded"></div>
         <div className="h-80 bg-surface-container-high w-full mb-12 rounded"></div>
         <div className="grid grid-cols-12 gap-gutter">
@@ -117,14 +117,14 @@ export default function SocietyDetail() {
   }
 
   const catLower = society.category ? society.category.toLowerCase() : 'default';
-  const bannerImage = CATEGORY_IMAGES[catLower] || CATEGORY_IMAGES.default;
+  const bannerImage = society.imageUrl || CATEGORY_IMAGES[catLower] || CATEGORY_IMAGES.default;
   const badgeClass = CATEGORY_BADGES[catLower] || CATEGORY_BADGES.default;
   const catIcon = CATEGORY_ICONS[catLower] || CATEGORY_ICONS.default;
 
   return (
     <div className="min-h-screen relative overflow-hidden pt-10">
       {/* Top Header Navigation (Contextual Detail) */}
-      <div className="max-w-container-max mx-auto px-margin-desktop mb-6 flex items-center gap-4">
+      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-6 flex items-center gap-4">
         <button 
           onClick={() => navigate('/societies')} 
           className="w-10 h-10 flex items-center justify-center border border-outline-variant rounded bg-white hover:bg-surface-container-low transition-colors"
@@ -139,7 +139,7 @@ export default function SocietyDetail() {
       </div>
 
       {/* Society Hero Section */}
-      <section className="max-w-container-max mx-auto px-margin-desktop py-6 grid grid-cols-12 gap-gutter">
+      <section className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-6 grid grid-cols-12 gap-gutter">
         <div className="col-span-12 lg:col-span-8 flex flex-col gap-6">
           <div className="flex items-center gap-3">
             <span className={`${badgeClass} px-3 py-1 font-label-uppercase text-[10px] tracking-widest rounded-sm uppercase`}>
@@ -159,17 +159,21 @@ export default function SocietyDetail() {
             "{society.name.includes('Rumi') ? 'Awakening scholastic hearts through classic wisdom' : 'Building specialized engagement environments for Namal scholars.'}"
           </p>
 
-          <div className="w-full h-80 relative rounded-lg overflow-hidden border border-outline-variant group">
+          <div className={`w-full relative rounded-lg overflow-hidden border border-outline-variant group ${society.imageUrl ? 'h-auto' : 'h-80'}`}>
             <img 
               alt={`${society.name} Lab Banner`} 
-              className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" 
+              className={`w-full transition-all duration-700 group-hover:scale-105 ${society.imageUrl ? 'h-auto block' : 'h-full object-cover'}`} 
               src={bannerImage}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-            <div className="absolute bottom-6 left-6 text-white">
-              <p className="font-label-uppercase text-label-uppercase opacity-80">CAMPUS PILLAR</p>
-              <p className="font-headline-sm text-headline-sm">{society.name}</p>
-            </div>
+            {!society.imageUrl && (
+              <>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="absolute bottom-6 left-6 text-white">
+                  <p className="font-label-uppercase text-label-uppercase opacity-80">CAMPUS PILLAR</p>
+                  <p className="font-headline-sm text-headline-sm">{society.name}</p>
+                </div>
+              </>
+            )}
           </div>
         </div>
 

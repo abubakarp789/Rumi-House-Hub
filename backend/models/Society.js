@@ -48,6 +48,10 @@ const SocietySchema = new mongoose.Schema({
     type: Number, 
     default: 0,
     min: 0
+  },
+  imageUrl: {
+    type: String,
+    trim: true
   }
 }, { timestamps: true });
 

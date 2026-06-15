@@ -14,7 +14,7 @@ const NEWS_DEFAULT_IMAGES = {
 };
 
 export default function NewsCard({ newsItem, onReadMore }) {
-  const { id, _id, title, category, publishedAt, publishedBy, summary, image } = newsItem;
+  const { id, _id, title, category, publishedAt, publishedBy, summary, image, imageUrl } = newsItem;
   const targetId = _id || id;
 
   const formattedDate = publishedAt
@@ -28,7 +28,9 @@ export default function NewsCard({ newsItem, onReadMore }) {
   const authorName = publishedBy && typeof publishedBy === 'object' ? publishedBy.name : 'Editorial Board';
 
   const catLower = category ? category.toLowerCase() : 'default';
-  const cardImage = image || NEWS_DEFAULT_IMAGES[catLower] || NEWS_DEFAULT_IMAGES.default;
+  const cardImage = imageUrl || image || NEWS_DEFAULT_IMAGES[catLower] || NEWS_DEFAULT_IMAGES.default;
+
+  const hasCustomImage = !!imageUrl;
 
   return (
     <article 
@@ -45,23 +47,21 @@ export default function NewsCard({ newsItem, onReadMore }) {
       }}
     >
       <div>
-        <div className="h-48 overflow-hidden relative">
+        <div className={`overflow-hidden relative ${hasCustomImage ? 'h-auto' : 'h-48'}`}>
           <img 
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" 
+            className={`w-full transition-transform duration-700 group-hover:scale-[1.03] ${hasCustomImage ? 'h-auto block' : 'h-full object-cover'}`} 
             src={cardImage} 
             alt={`${title}`} 
           />
-          <div className="absolute top-4 left-4 shadow-sm">
-            <span className="atrium-badge px-3 py-1 text-[9px] tracking-widest uppercase font-bold">
-              {category || 'General'}
-            </span>
-          </div>
         </div>
 
         <div className="p-6 pb-0 text-left">
           <div className="flex justify-between items-center mb-2">
             <span className="text-[10px] font-bold text-[#71887e] font-mono">
               {formattedDate}
+            </span>
+            <span className="atrium-badge px-2.5 py-0.5 text-[9px] tracking-widest uppercase font-bold">
+              {category || 'General'}
             </span>
           </div>
 

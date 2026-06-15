@@ -25,30 +25,32 @@ const CATEGORY_BADGES = {
 };
 
 export default function SocietyCard({ society }) {
-  const { id, _id, name, category, description, memberCount, patronName, facultyCoordinator } = society;
+  const { id, _id, name, category, description, memberCount, patronName, facultyCoordinator, imageUrl } = society;
   const targetId = _id || id;
 
   const catLower = category ? category.toLowerCase() : 'default';
-  const cardImage = CATEGORY_IMAGES[catLower] || CATEGORY_IMAGES.default;
+  const cardImage = imageUrl || CATEGORY_IMAGES[catLower] || CATEGORY_IMAGES.default;
   const badgeClass = CATEGORY_BADGES[catLower] || CATEGORY_BADGES.default;
+
+  const hasCustomImage = !!imageUrl;
 
   return (
     <article className="atrium-card flex flex-col justify-between h-full group">
       <div>
-        <div className="h-48 overflow-hidden relative">
+        <div className={`w-full overflow-hidden relative ${hasCustomImage ? 'h-auto' : 'h-48'}`}>
           <img 
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" 
+            className={`w-full transition-transform duration-700 group-hover:scale-[1.03] ${hasCustomImage ? 'h-auto block' : 'h-full object-cover'}`} 
             src={cardImage} 
             alt={`${name}`} 
           />
-          <div className="absolute top-4 left-4 shadow-sm">
-            <span className="atrium-badge px-3 py-1 text-[9px] tracking-widest uppercase font-bold">
-              {category || 'General'}
-            </span>
-          </div>
         </div>
         
         <div className="p-6 pb-0 text-left">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="atrium-badge px-2 py-0.5 text-[9px] tracking-widest uppercase font-bold">
+              {category || 'General'}
+            </span>
+          </div>
           <h3 className="atrium-card-title text-[1.35rem] font-semibold mb-2 group-hover:text-[var(--atrium-gold)] transition-colors duration-300">
             {name}
           </h3>
