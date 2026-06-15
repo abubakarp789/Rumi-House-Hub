@@ -11,6 +11,13 @@ import ProposeEventTab from '../components/dashboard/ProposeEventTab';
 import AttendanceCheckInTab from '../components/dashboard/AttendanceCheckInTab';
 import CredentialsProfileTab from '../components/dashboard/CredentialsProfileTab';
 
+const toLocalDateTimeInput = (value) => {
+  if (!value) return '';
+  const date = new Date(value);
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
+  return localDate.toISOString().slice(0, 16);
+};
+
 export default function ExecutiveDashboard() {
   const { user } = useContext(AuthContext);
   const location = useLocation();
@@ -24,6 +31,7 @@ export default function ExecutiveDashboard() {
   const [proposalSuccess, setProposalSuccess] = useState('');
   const [proposalErrors, setProposalErrors] = useState({});
   const [proposing, setProposing] = useState(false);
+  const [editingEventId, setEditingEventId] = useState('');
   const [formData, setFormData] = useState({
     societyId: '',
     title: '',
@@ -150,6 +158,9 @@ export default function ExecutiveDashboard() {
     if (!formData.location.trim()) errors.location = 'Venue location is required.';
     if (!formData.startDateTime) errors.startDateTime = 'Start date/time are required.';
     if (!formData.endDateTime) errors.endDateTime = 'End date/time are required.';
+    if (formData.startDateTime && formData.endDateTime && new Date(formData.endDateTime) <= new Date(formData.startDateTime)) {
+      errors.endDateTime = 'End date/time must be after the start date/time.';
+    }
     if (!formData.capacity || parseInt(formData.capacity, 10) < 1) errors.capacity = 'Seat capacity must be at least 1.';
     setProposalErrors(errors);
     return Object.keys(errors).length === 0;
@@ -162,9 +173,14 @@ export default function ExecutiveDashboard() {
 
     try {
       setProposing(true);
-      const response = await api.createEvent(formData);
-      setProposalSuccess(response.message || 'Co-curricular event proposal drafted and queued successfully!');
-      setEvents((prev) => [response.event, ...prev]);
+      const response = editingEventId
+        ? await api.updateEvent(editingEventId, formData)
+        : await api.createEvent(formData);
+      setProposalSuccess(response.message || 'Co-curricular event saved successfully!');
+      setEvents((prev) => editingEventId
+        ? prev.map((event) => event._id === editingEventId ? { ...event, ...response.event } : event)
+        : [response.event, ...prev]);
+      setEditingEventId('');
       setFormData({
         societyId: '',
         title: '',
@@ -185,6 +201,32 @@ export default function ExecutiveDashboard() {
     } finally {
       setProposing(false);
     }
+  };
+
+  const handleEditEvent = (event) => {
+    setEditingEventId(event._id);
+    setFormData({
+      societyId: event.societyId?._id || event.societyId || '',
+      title: event.title || '',
+      description: event.description || '',
+      type: event.type || 'seminar',
+      location: event.location || '',
+      startDateTime: toLocalDateTimeInput(event.startDateTime),
+      endDateTime: toLocalDateTimeInput(event.endDateTime),
+      capacity: event.capacity || 1
+    });
+    setProposalErrors({});
+    setProposalSuccess('');
+    setActiveTab('propose');
+  };
+
+  const handleCancelEventEdit = () => {
+    setEditingEventId('');
+    setFormData({
+      societyId: '', title: '', description: '', type: 'seminar', location: '',
+      startDateTime: '', endDateTime: '', capacity: 50
+    });
+    setProposalErrors({});
   };
 
   const handleLoadAttendance = async (eventId, eventTitle) => {
@@ -230,6 +272,17 @@ export default function ExecutiveDashboard() {
       setError(err.message || 'Check-in entry passcode verification failed.');
     } finally {
       setVerifying(false);
+    }
+  };
+
+  const handleDeleteAttendance = async (attendanceId) => {
+    if (!verifyEventId) return;
+    try {
+      await api.deleteAttendance(verifyEventId, attendanceId);
+      setAttendanceList((prev) => prev.filter((record) => record._id !== attendanceId));
+      setVerifySuccess('Attendance correction saved.');
+    } catch (err) {
+      setVerifyError(err.message || 'Failed to remove attendance record.');
     }
   };
 
@@ -395,6 +448,7 @@ export default function ExecutiveDashboard() {
             setActiveTab={setActiveTab} 
             handleLoadAttendance={handleLoadAttendance} 
             handleDeleteEvent={handleDeleteEvent}
+            handleEditEvent={handleEditEvent}
           />
         )}
 
@@ -416,6 +470,8 @@ export default function ExecutiveDashboard() {
             proposing={proposing} 
             handleInputChange={handleInputChange} 
             handleProposalSubmit={handleProposalSubmit} 
+            editingEventId={editingEventId}
+            handleCancelEventEdit={handleCancelEventEdit}
           />
         )}
 
@@ -432,7 +488,8 @@ export default function ExecutiveDashboard() {
             verifyError={verifyError} 
             verifyToken={verifyToken} 
             setVerifyToken={setVerifyToken} 
-            handleManualCheckInVerify={handleManualCheckInVerify} 
+            handleManualCheckInVerify={handleManualCheckInVerify}
+            handleDeleteAttendance={handleDeleteAttendance}
           />
         )}
 

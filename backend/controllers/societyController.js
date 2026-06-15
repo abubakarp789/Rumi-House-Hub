@@ -1,5 +1,10 @@
 const Society = require('../models/Society');
 const Membership = require('../models/Membership');
+const Event = require('../models/Event');
+const RSVP = require('../models/RSVP');
+const Attendance = require('../models/Attendance');
+
+const SOCIETY_CATEGORIES = ['technical', 'cultural', 'sports', 'social', 'literary', 'arts'];
 
 // @desc    Get all societies (supports category filter)
 // @route   GET /api/societies
@@ -88,6 +93,52 @@ const createSociety = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+const updateSociety = async (req, res, next) => {
+  try {
+    const society = await Society.findById(req.params.id);
+    if (!society) return res.status(404).json({ error: 'Not Found', message: 'Society not found.' });
+
+    const fields = ['name', 'description', 'patronName', 'facultyCoordinator', 'category'];
+    for (const field of fields) {
+      if (!Object.prototype.hasOwnProperty.call(req.body, field)) continue;
+      const value = String(req.body[field] || '').trim();
+      if (['name', 'description', 'patronName', 'category'].includes(field) && !value) {
+        return res.status(400).json({ error: 'Validation Error', message: `${field} cannot be empty.` });
+      }
+      if (field === 'category' && !SOCIETY_CATEGORIES.includes(value.toLowerCase())) {
+        return res.status(400).json({ error: 'Validation Error', message: 'Invalid society category.' });
+      }
+      society[field] = field === 'category' ? value.toLowerCase() : value;
+    }
+
+    await society.save();
+    return res.json({ success: true, message: 'Society updated successfully.', society });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const deleteSociety = async (req, res, next) => {
+  try {
+    const society = await Society.findById(req.params.id);
+    if (!society) return res.status(404).json({ error: 'Not Found', message: 'Society not found.' });
+
+    const events = await Event.find({ societyId: society._id }).select('_id');
+    const eventIds = events.map((event) => event._id);
+    await Promise.all([
+      Attendance.deleteMany({ eventId: { $in: eventIds } }),
+      RSVP.deleteMany({ eventId: { $in: eventIds } }),
+      Event.deleteMany({ societyId: society._id }),
+      Membership.deleteMany({ societyId: society._id })
+    ]);
+    await Society.deleteOne({ _id: society._id });
+
+    return res.json({ success: true, message: 'Society and its related events and participation records deleted.' });
+  } catch (error) {
+    return next(error);
   }
 };
 
@@ -188,6 +239,28 @@ const updateMembershipStatus = async (req, res, next) => {
   }
 };
 
+const deleteMembership = async (req, res, next) => {
+  try {
+    const { id: societyId, membershipId } = req.params;
+    const membership = await Membership.findById(membershipId);
+    if (!membership || String(membership.societyId) !== societyId) {
+      return res.status(404).json({ error: 'Not Found', message: 'Membership record not found.' });
+    }
+
+    const isOwner = String(membership.userId) === String(req.user._id);
+    if (req.user.role !== 'admin' && !isOwner) {
+      return res.status(403).json({ error: 'Forbidden', message: 'You can only withdraw your own membership.' });
+    }
+
+    await Membership.deleteOne({ _id: membership._id });
+    const memberCount = await Membership.countDocuments({ societyId, status: 'approved' });
+    await Society.updateOne({ _id: societyId }, { $set: { memberCount } });
+    return res.json({ success: true, message: 'Membership record removed successfully.' });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 // @desc    Get all pending membership requests
 // @route   GET /api/societies/memberships/all
 // @access  Private/Admin
@@ -206,7 +279,10 @@ module.exports = {
   getSocieties,
   getSocietyById,
   createSociety,
+  updateSociety,
+  deleteSociety,
   joinSociety,
   updateMembershipStatus,
+  deleteMembership,
   getAllMemberships
 };

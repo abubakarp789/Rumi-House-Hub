@@ -13,7 +13,8 @@ export default function AttendanceCheckInTab({
   verifyError,
   verifyToken,
   setVerifyToken,
-  handleManualCheckInVerify
+  handleManualCheckInVerify,
+  handleDeleteAttendance
 }) {
   const selectedEvent = approvedEvents.find(e => e._id === verifyEventId);
   const totalCheckedIn = attendanceList.length;
@@ -91,6 +92,7 @@ export default function AttendanceCheckInTab({
                       <th className="p-4 tracking-wider">Dept</th>
                       <th className="p-4 tracking-wider">RSVP Status</th>
                       <th className="p-4 tracking-wider">Check-in Time</th>
+                      <th className="p-4 tracking-wider text-right">Correction</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant/40">
@@ -115,6 +117,21 @@ export default function AttendanceCheckInTab({
                               <span className="material-symbols-outlined text-sm">check_circle</span>
                               {timeStr}
                             </span>
+                          </td>
+                          <td className="p-4 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (window.confirm(`Remove ${student.name}'s attendance record?`)) {
+                                  handleDeleteAttendance(record._id);
+                                }
+                              }}
+                              className="p-2 text-red-600 border border-red-200 hover:bg-red-50 rounded"
+                              aria-label={`Remove attendance record for ${student.name}`}
+                              title="Remove incorrect check-in"
+                            >
+                              <span className="material-symbols-outlined text-sm">person_remove</span>
+                            </button>
                           </td>
                         </tr>
                       );

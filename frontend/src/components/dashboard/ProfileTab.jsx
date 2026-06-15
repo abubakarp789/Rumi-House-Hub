@@ -1,6 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-export default function ProfileTab({ user, getInitials }) {
+export default function ProfileTab({ user, getInitials, updateProfile }) {
+  const [formData, setFormData] = useState({
+    name: user.name || '',
+    department: user.department || '',
+    batch: user.batch || '',
+    phone: user.phone || '',
+    emergencyContact: user.emergencyContact || ''
+  });
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    setFormData({
+      name: user.name || '',
+      department: user.department || '',
+      batch: user.batch || '',
+      phone: user.phone || '',
+      emergencyContact: user.emergencyContact || ''
+    });
+  }, [user]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setMessage('');
+    if (!formData.name.trim() || !formData.department.trim() || !formData.batch.trim()) {
+      setMessage('Name, department, and batch are required.');
+      return;
+    }
+    try {
+      setSaving(true);
+      await updateProfile(formData);
+      setMessage('Profile saved successfully.');
+    } catch (error) {
+      setMessage(error.message || 'Failed to save profile.');
+    } finally {
+      setSaving(false);
+    }
+  };
   return (
     <div className="grid grid-cols-12 gap-gutter animate-fade-in">
       {/* Left Column: Credentials overview panel */}
@@ -58,7 +95,8 @@ export default function ProfileTab({ user, getInitials }) {
             <span className="text-xs text-on-surface-variant italic">Last updated: June 01, 2026</span>
           </div>
 
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+          {message && <div className="mb-4 p-3 border border-outline-variant bg-surface text-xs" role="status">{message}</div>}
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="font-label-uppercase text-label-uppercase text-on-surface-variant font-bold text-xs tracking-wider block">
@@ -67,7 +105,8 @@ export default function ProfileTab({ user, getInitials }) {
                 <input 
                   className="w-full bg-surface border border-outline-variant px-4 py-3 focus:border-primary focus:ring-0 rounded-none font-body-md transition-all outline-none" 
                   type="text" 
-                  defaultValue={user.name}
+                  value={formData.name}
+                  onChange={(event) => setFormData((current) => ({ ...current, name: event.target.value }))}
                 />
               </div>
               <div className="space-y-2">
@@ -77,7 +116,8 @@ export default function ProfileTab({ user, getInitials }) {
                 <input 
                   className="w-full bg-surface border border-outline-variant px-4 py-3 focus:border-primary focus:ring-0 rounded-none font-body-md transition-all outline-none font-mono" 
                   type="email" 
-                  defaultValue={user.email} 
+                  value={user.email}
+                  readOnly
                 />
               </div>
               <div className="space-y-2">
@@ -86,7 +126,9 @@ export default function ProfileTab({ user, getInitials }) {
                 </label>
                 <input 
                   className="w-full bg-surface border border-outline-variant px-4 py-3 focus:border-primary focus:ring-0 rounded-none font-body-md transition-all outline-none" 
-                  placeholder="+92 300 1234567" 
+                  placeholder="+92 300 1234567"
+                  value={formData.phone}
+                  onChange={(event) => setFormData((current) => ({ ...current, phone: event.target.value }))}
                   type="text" 
                 />
               </div>
@@ -96,7 +138,9 @@ export default function ProfileTab({ user, getInitials }) {
                 </label>
                 <input 
                   className="w-full bg-surface border border-outline-variant px-4 py-3 focus:border-primary focus:ring-0 rounded-none font-body-md transition-all outline-none" 
-                  placeholder="Name & Contact Details" 
+                  placeholder="Name & Contact Details"
+                  value={formData.emergencyContact}
+                  onChange={(event) => setFormData((current) => ({ ...current, emergencyContact: event.target.value }))}
                   type="text" 
                 />
               </div>
@@ -104,9 +148,10 @@ export default function ProfileTab({ user, getInitials }) {
             <div className="pt-4 flex justify-end">
               <button 
                 className="bg-primary text-on-primary px-8 py-3 font-label-uppercase text-label-uppercase hover:bg-primary-container transition-all flex items-center gap-2 text-white font-bold text-xs tracking-wider uppercase rounded" 
-                type="button"
+                type="submit"
+                disabled={saving}
               >
-                Save Changes
+                {saving ? 'Saving...' : 'Save Changes'}
                 <span className="material-symbols-outlined text-[18px]">done_all</span>
               </button>
             </div>

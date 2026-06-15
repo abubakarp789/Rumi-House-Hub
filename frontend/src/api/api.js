@@ -60,12 +60,20 @@ export async function getCurrentUser() {
   return request('GET', '/auth/me');
 }
 
+export async function updateProfile(payload) {
+  return request('PATCH', '/auth/me', payload);
+}
+
 export async function getAllUsers() {
   return request('GET', '/auth/users');
 }
 
 export async function updateUserRole(userId, role) {
   return request('PATCH', `/auth/users/${userId}/role`, { role });
+}
+
+export async function deleteUser(userId) {
+  return request('DELETE', `/auth/users/${userId}`);
 }
 
 /**
@@ -84,12 +92,24 @@ export async function createSociety(payload) {
   return request('POST', '/societies', payload);
 }
 
+export async function updateSociety(id, payload) {
+  return request('PATCH', `/societies/${id}`, payload);
+}
+
+export async function deleteSociety(id) {
+  return request('DELETE', `/societies/${id}`);
+}
+
 export async function joinSociety(id) {
   return request('POST', `/societies/${id}/join`);
 }
 
 export async function updateMembershipStatus(societyId, membershipId, status) {
   return request('PATCH', `/societies/${societyId}/memberships/${membershipId}/status`, { status });
+}
+
+export async function deleteMembership(societyId, membershipId) {
+  return request('DELETE', `/societies/${societyId}/memberships/${membershipId}`);
 }
 
 export async function getAllMemberships() {
@@ -112,6 +132,10 @@ export async function createEvent(payload) {
   return request('POST', '/events', payload);
 }
 
+export async function updateEvent(id, payload) {
+  return request('PATCH', `/events/${id}`, payload);
+}
+
 export async function updateEventStatus(id, status, rejectionReason = '') {
   const payload = { status };
   if (rejectionReason) {
@@ -122,6 +146,10 @@ export async function updateEventStatus(id, status, rejectionReason = '') {
 
 export async function submitRsvp(id) {
   return request('POST', `/events/${id}/rsvp`);
+}
+
+export async function cancelRsvp(id) {
+  return request('DELETE', `/events/${id}/rsvp`);
 }
 
 export async function getEventQr(id) {
@@ -143,6 +171,10 @@ export async function getEventAttendance(id) {
   return request('GET', `/events/${id}/attendance`);
 }
 
+export async function deleteAttendance(eventId, attendanceId) {
+  return request('DELETE', `/events/${eventId}/attendance/${attendanceId}`);
+}
+
 /**
  * News API Operations
  */
@@ -156,6 +188,10 @@ export async function getNewsById(id) {
 
 export async function createNews(payload) {
   return request('POST', '/news', payload);
+}
+
+export async function updateNews(id, payload) {
+  return request('PATCH', `/news/${id}`, payload);
 }
 
 export async function deleteNews(id) {

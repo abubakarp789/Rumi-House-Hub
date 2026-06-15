@@ -1,6 +1,6 @@
 # Rumi House Hub — Frontend Application
 
-This is the React client application for Rumi House Hub, built with Vite, React Router, and GSAP.
+This is the React client application for Rumi House Hub, built with Vite, React Router, Tailwind CSS, a scoped Bootstrap 5 grid import, and GSAP.
 
 ## Getting Started
 
@@ -43,3 +43,4 @@ The compiled output is saved under the `dist/` directory.
 * **Background (Atrium Cream):** `#faf9f6`
 * **Typography:** `Playfair Display` for display headings and titles, `Inter` for layout labels and reading copy.
 * **Layout Utilities:** Responsive grid and bento boxes aligned with Namal visual branding.
+* **Bootstrap Scope:** Only `bootstrap-grid.min.css` is imported, before the project styles, and used for the Users & Roles summary grid. Existing Tailwind and custom CSS remain authoritative.

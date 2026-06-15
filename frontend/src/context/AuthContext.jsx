@@ -77,6 +77,12 @@ export function AuthProvider({ children }) {
     setAuthError('');
   };
 
+  const updateProfile = async (profileData) => {
+    const response = await api.updateProfile(profileData);
+    setUser((current) => ({ ...current, ...response.user }));
+    return response.user;
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -86,6 +92,7 @@ export function AuthProvider({ children }) {
       setAuthError,
       login,
       register,
+      updateProfile,
       logout
     }}>
       {children}

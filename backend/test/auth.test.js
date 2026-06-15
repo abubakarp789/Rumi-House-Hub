@@ -33,7 +33,7 @@ test('registration handler always sets role to student regardless of request bod
 
 // ---------- Login error messages ----------
 
-test('login returns 401 for invalid credentials without leaking user existence', () => {
+test('login returns a generic invalid credential response', () => {
   const fs = require('node:fs');
   const path = require('node:path');
   const controllerSource = fs.readFileSync(
@@ -41,16 +41,14 @@ test('login returns 401 for invalid credentials without leaking user existence',
     'utf-8'
   );
 
-  // Both "user not found" and "incorrect password" return 401
-  const userNotFoundMatch = controllerSource.match(/status\(401\).*User not found/);
-  const incorrectPwMatch = controllerSource.match(/status\(401\).*Incorrect password/);
-  assert.ok(userNotFoundMatch, 'User not found should return 401');
-  assert.ok(incorrectPwMatch, 'Incorrect password should return 401');
+  const loginSection = controllerSource.split('const loginUser')[1]?.split('const getUserProfile')[0] || '';
+  assert.match(loginSection, /status\(401\).*Invalid email or password/);
+  assert.doesNotMatch(loginSection, /User not found|Incorrect password/);
 });
 
 // ---------- Password policy ----------
 
-test('registration enforces minimum 6 character password', () => {
+test('registration enforces minimum 8 character password', () => {
   const fs = require('node:fs');
   const path = require('node:path');
   const controllerSource = fs.readFileSync(
@@ -58,8 +56,8 @@ test('registration enforces minimum 6 character password', () => {
     'utf-8'
   );
 
-  assert.match(controllerSource, /password\.length\s*<\s*6/,
-    'Registration must enforce minimum 6 character password');
+  assert.match(controllerSource, /password\.length\s*<\s*8/,
+    'Registration must enforce minimum 8 character password');
 });
 
 // ---------- JWT token generation ----------

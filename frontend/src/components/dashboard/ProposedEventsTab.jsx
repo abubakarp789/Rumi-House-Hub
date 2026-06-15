@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import EmptyState from '../EmptyState';
 
-export default function ProposedEventsTab({ events, setActiveTab, handleLoadAttendance, handleDeleteEvent }) {
+export default function ProposedEventsTab({ events, setActiveTab, handleLoadAttendance, handleDeleteEvent, handleEditEvent }) {
   const awaitingReviewCount = events.filter(e => e.status === 'pendingApproval' || e.status === 'pending').length;
   const approvedCount = events.filter(e => e.status === 'approved').length;
 
@@ -156,6 +156,15 @@ export default function ProposedEventsTab({ events, setActiveTab, handleLoadAtte
                               </Link>
                             </>
                           ) : (
+                            <>
+                            <button
+                              type="button"
+                              onClick={() => handleEditEvent(evt)}
+                              className="p-1.5 hover:bg-emerald-50 rounded transition-colors text-emerald-700 flex items-center justify-center border border-emerald-200"
+                              title="Edit Event Proposal"
+                            >
+                              <span className="material-symbols-outlined text-[16px]">edit</span>
+                            </button>
                             <button 
                               onClick={() => {
                                 if (window.confirm("Are you sure you want to delete this event proposal?")) {
@@ -167,6 +176,7 @@ export default function ProposedEventsTab({ events, setActiveTab, handleLoadAtte
                             >
                               <span className="material-symbols-outlined text-[16px]">delete</span>
                             </button>
+                            </>
                           )}
                         </div>
                       </td>

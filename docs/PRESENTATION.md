@@ -49,15 +49,16 @@ This document contains the slide-by-slide content for your WAD Course Project Pr
 * **Frontend:**
   * **React 18** & **Vite** (Vibrant, modular Single Page App)
   * **React Router 6** (Dynamic client routing and redirects)
-  * **Tailwind CSS** (Custom, modern Dark/Light theme design)
+  * **Tailwind CSS & Custom CSS** (Primary responsive visual system)
+  * **Bootstrap 5 Grid** (Scoped use in the administrative registry summary)
 * **Backend:**
   * **Node.js** & **Express.js** (REST API endpoints)
 * **Database:**
   * **MongoDB** & **Mongoose** (Relationship schemas & indexing)
 * **Security & Quality:**
   * **JSON Web Tokens (JWT)** & **Bcrypt** password hashing
-  * **Vitest** (31 frontend unit tests)
-  * **Node Native Runner** (34 backend unit tests)
+  * **Vitest** (30 frontend unit tests)
+  * **Node Native Runner** (38 backend tests)
 
 ---
 
@@ -114,6 +115,7 @@ This document contains the slide-by-slide content for your WAD Course Project Pr
 * **Administrative Approvals:** Admins accept or reject event drafts (providing reasons) and review pending society memberships.
 * **Role Promotions:** Admins search user lists and promote students to executive organizers.
 * **News Bulletin Creator:** Admins publish announcements immediately.
+* **Complete CRUD Workflows:** Authorized users can edit and delete societies, event proposals, bulletins, accounts, memberships, RSVPs, and incorrect attendance records.
 
 ---
 
@@ -128,7 +130,7 @@ This document contains the slide-by-slide content for your WAD Course Project Pr
 
 ## Slide 11: Demonstration Screenshots
 ### **Interactive System UI**
-*(Tip: Replace these placeholders with actual screenshots of your running app)*
+The project repository includes actual screenshots of the running application under `docs/screenshots`.
 * **Login & Registration:** Clean, modern institutional portal with real-time validation alerts.
 * **Student Dashboard:** View of registered events, active memberships, and the interactive QR code gate pass modal.
 * **Admin Dashboard:** Moderation tables for approving events and student society enrollments.
@@ -139,7 +141,7 @@ This document contains the slide-by-slide content for your WAD Course Project Pr
 ## Slide 12: Challenges Faced & Solutions
 1. **Database Race Conditions:**
    * *Problem:* Two users booking the same final seat at the exact same millisecond could bypass capacity caps.
-   * *Solution:* Implemented atomic MongoDB transactions. Increment seats selectively and rollback the RSVP immediately if constraints are violated.
+   * *Solution:* Implemented conditional atomic seat increments and immediate RSVP rollback when the final capacity check fails.
 2. **Secure Pass Verification:**
    * *Problem:* Preventing students from fabricating passes by simply copy-pasting code parameters.
    * *Solution:* Generated randomized, database-stored `passToken` strings that are verified at the gate.

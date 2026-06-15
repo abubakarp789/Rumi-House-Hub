@@ -80,6 +80,35 @@ const createNews = async (req, res, next) => {
   }
 };
 
+const updateNews = async (req, res, next) => {
+  try {
+    const article = await News.findById(req.params.id);
+    if (!article) return res.status(404).json({ error: 'Not Found', message: 'News article not found.' });
+
+    const proposed = {
+      title: req.body.title ?? article.title,
+      summary: req.body.summary ?? article.summary,
+      content: req.body.content ?? article.content,
+      category: req.body.category ?? article.category
+    };
+    if (!String(proposed.title).trim() || !String(proposed.summary).trim() || !String(proposed.content).trim()) {
+      return res.status(400).json({ error: 'Validation Error', message: 'Title, summary, and content are required.' });
+    }
+    if (!['newsletter', 'alert', 'visit'].includes(proposed.category)) {
+      return res.status(400).json({ error: 'Validation Error', message: 'Invalid news category.' });
+    }
+
+    article.title = String(proposed.title).trim();
+    article.summary = String(proposed.summary).trim();
+    article.content = String(proposed.content).trim();
+    article.category = proposed.category;
+    await article.save();
+    return res.json({ success: true, message: 'News article updated successfully.', article });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 // @desc    Delete a news article (Admin only)
 // @route   DELETE /api/news/:id
 // @access  Private/Admin
@@ -110,5 +139,6 @@ module.exports = {
   getNews,
   getNewsById,
   createNews,
+  updateNews,
   deleteNews
 };

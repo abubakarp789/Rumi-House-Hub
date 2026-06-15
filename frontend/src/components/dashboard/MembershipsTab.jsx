@@ -40,7 +40,7 @@ const CATEGORY_STYLES = {
   }
 };
 
-export default function MembershipsTab({ memberships }) {
+export default function MembershipsTab({ memberships, handleMembershipDelete }) {
   const approvedCount = memberships.filter((m) => m.status === 'approved').length;
   const pendingCount = memberships.filter((m) => m.status === 'pending').length;
   const rejectedCount = memberships.filter((m) => m.status === 'rejected').length;
@@ -202,12 +202,24 @@ export default function MembershipsTab({ memberships }) {
                         )}
                       </td>
                       <td className="px-8 py-5 text-right">
-                        <Link 
-                          to={`/societies/${soc._id}`} 
-                          className="text-primary hover:underline text-xs font-label-uppercase font-bold tracking-wider"
-                        >
-                          View Desk
-                        </Link>
+                        <div className="inline-flex items-center gap-3">
+                          <Link
+                            to={`/societies/${soc._id}`}
+                            className="text-primary hover:underline text-xs font-label-uppercase font-bold tracking-wider"
+                          >
+                            View Desk
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const action = membership.status === 'approved' ? 'leave this society' : 'withdraw this request';
+                              if (window.confirm(`Are you sure you want to ${action}?`)) handleMembershipDelete(membership);
+                            }}
+                            className="text-red-600 hover:underline text-xs font-label-uppercase font-bold tracking-wider"
+                          >
+                            {membership.status === 'approved' ? 'Leave' : 'Withdraw'}
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { recordOrganizerCheckIn, getEventAttendance } = require('../controllers/attendanceController');
+const { deleteAttendance, recordOrganizerCheckIn, getEventAttendance } = require('../controllers/attendanceController');
 const { protect } = require('../middleware/authMiddleware');
 const { authorizeRoles } = require('../middleware/roleMiddleware');
 
@@ -9,5 +9,6 @@ router.post('/:id/attendance/checkin', protect, authorizeRoles('admin', 'executi
 
 // Admin/Executive sheet view rosters
 router.get('/:id/attendance', protect, authorizeRoles('admin', 'executive'), getEventAttendance);
+router.delete('/:id/attendance/:attendanceId', protect, authorizeRoles('admin', 'executive'), deleteAttendance);
 
 module.exports = router;

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import EmptyState from '../EmptyState';
 
-export default function RsvpsTab({ rsvps, qrPasses, handleLoadQr }) {
+export default function RsvpsTab({ rsvps, qrPasses, handleLoadQr, handleCancelRsvp }) {
   const navigate = useNavigate();
   return (
     <div className="space-y-8 animate-fade-in">
@@ -117,6 +117,18 @@ export default function RsvpsTab({ rsvps, qrPasses, handleLoadQr }) {
                     >
                       <span className="material-symbols-outlined text-sm">qr_code_2</span>
                       {qrPasses[evt._id] ? 'Hide Pass' : 'Reveal QR'}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isCheckedIn}
+                      onClick={() => {
+                        if (window.confirm(`Cancel your RSVP for ${evt.title}?`)) handleCancelRsvp(rsvp);
+                      }}
+                      className="px-3 py-2 border border-red-200 text-red-600 hover:bg-red-50 disabled:opacity-40 disabled:cursor-not-allowed rounded"
+                      aria-label={isCheckedIn ? 'Checked-in pass cannot be cancelled' : `Cancel RSVP for ${evt.title}`}
+                      title={isCheckedIn ? 'Checked-in passes cannot be cancelled' : 'Cancel RSVP'}
+                    >
+                      <span className="material-symbols-outlined text-sm">event_busy</span>
                     </button>
                   </div>
                 </div>

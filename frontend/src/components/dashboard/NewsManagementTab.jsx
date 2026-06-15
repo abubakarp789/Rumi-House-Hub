@@ -12,6 +12,9 @@ export default function NewsManagementTab({
   newsError,
   newsSubmitting,
   handleNewsSubmit,
+  editingNewsId,
+  setEditingNewsId,
+  handleNewsEdit,
   handleNewsDelete
 }) {
   return (
@@ -72,6 +75,14 @@ export default function NewsManagementTab({
                         }`}>
                           {n.category}
                         </span>
+                        <button
+                          type="button"
+                          onClick={() => handleNewsEdit(n)}
+                          className="text-slate-400 hover:text-emerald-700 transition-colors p-1 flex items-center justify-center rounded hover:bg-emerald-50"
+                          title="Edit Bulletin"
+                        >
+                          <span className="material-symbols-outlined text-sm">edit</span>
+                        </button>
                         <button 
                           onClick={() => {
                             if (window.confirm("Are you sure you want to permanently delete this bulletin?")) {
@@ -104,7 +115,7 @@ export default function NewsManagementTab({
       <div className="lg:col-span-4">
         <article className="bg-white border border-slate-200 p-6 md:p-8 rounded-lg shadow-sm">
           <h3 className="font-headline-sm text-xl text-emerald-950 font-serif font-bold border-b border-slate-100 pb-4 mb-6">
-            Publish Bulletin Announcement
+            {editingNewsId ? 'Edit Bulletin Announcement' : 'Publish Bulletin Announcement'}
           </h3>
           
           {newsSuccess && (
@@ -183,8 +194,20 @@ export default function NewsManagementTab({
               className="w-full py-3 bg-emerald-700 text-white font-bold hover:bg-emerald-800 transition-all text-xs uppercase tracking-widest flex items-center justify-center gap-2 rounded shadow-sm"
             >
               <span className="material-symbols-outlined text-sm">campaign</span>
-              {newsSubmitting ? 'Publishing announcement...' : 'Publish Article'}
+              {newsSubmitting ? 'Saving announcement...' : editingNewsId ? 'Update Article' : 'Publish Article'}
             </button>
+            {editingNewsId && (
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingNewsId('');
+                  setNewsFormData({ title: '', summary: '', content: '', category: 'newsletter' });
+                }}
+                className="w-full py-3 border border-slate-300 text-slate-600 font-bold hover:bg-slate-50 text-xs uppercase tracking-widest rounded"
+              >
+                Cancel Edit
+              </button>
+            )}
           </form>
         </article>
       </div>

@@ -202,7 +202,7 @@ export default function SocietyDetail() {
                 <p className="text-body-sm text-on-surface-variant opacity-80">
                   Please sign in with your student account credentials to apply.
                 </p>
-                <Link to="/login" className="w-full py-4 bg-primary text-on-primary font-label-uppercase text-label-uppercase hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center justify-center gap-2 text-center text-xs">
+                <Link to="/login" className="w-full py-4 bg-primary text-on-primary font-label-uppercase text-label-uppercase hover:bg-primary-container hover:text-white transition-all flex items-center justify-center gap-2 text-center text-xs">
                   Sign In to Join <span className="material-symbols-outlined">arrow_forward</span>
                 </Link>
               </>
@@ -240,7 +240,7 @@ export default function SocietyDetail() {
                 <button 
                   onClick={handleJoinSociety} 
                   disabled={submitting}
-                  className="w-full py-4 bg-primary text-on-primary font-label-uppercase text-label-uppercase tracking-[0.2em] hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center justify-center gap-2 text-xs"
+                  className="w-full py-4 bg-primary text-on-primary font-label-uppercase text-label-uppercase tracking-[0.2em] hover:bg-primary-container hover:text-white transition-all flex items-center justify-center gap-2 text-xs"
                 >
                   {submitting ? 'SUBMITTING...' : 'JOIN SOCIETY'} <span className="material-symbols-outlined">arrow_forward</span>
                 </button>

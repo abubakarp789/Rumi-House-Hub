@@ -74,4 +74,23 @@ const getEventAttendance = async (req, res, next) => {
   }
 };
 
-module.exports = { getEventAttendance, recordOrganizerCheckIn };
+const deleteAttendance = async (req, res, next) => {
+  try {
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).json({ error: 'Not Found', message: 'Event not found.' });
+    if (!canManageEvent(req.user, event)) {
+      return res.status(403).json({ error: 'Forbidden', message: 'You can only correct attendance for events you manage.' });
+    }
+
+    const attendance = await Attendance.findOneAndDelete({
+      _id: req.params.attendanceId,
+      eventId: event._id
+    });
+    if (!attendance) return res.status(404).json({ error: 'Not Found', message: 'Attendance record not found.' });
+    return res.json({ success: true, message: 'Attendance record removed successfully.' });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+module.exports = { deleteAttendance, getEventAttendance, recordOrganizerCheckIn };

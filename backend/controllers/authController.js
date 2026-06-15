@@ -45,10 +45,10 @@ const registerUser = async (req, res, next) => {
       return res.status(400).json({ error: 'Validation Error', message: 'Batch year is required.' });
     }
 
-    if (!password || password.length < 6) {
+    if (!password || password.length < 8) {
       return res.status(400).json({ 
         error: 'Validation Error', 
-        message: 'Password is required and must be at least 6 characters long.' 
+        message: 'Password is required and must be at least 8 characters long.'
       });
     }
 
@@ -126,15 +126,12 @@ const loginUser = async (req, res, next) => {
     // Find the User document
     const user = await User.findOne({ email: lowercaseEmail });
 
-    if (!user) {
-      return res.status(401).json({ error: 'Auth Error', message: 'Invalid credentials. User not found.' });
-    }
+    const isPasswordCorrect = user
+      ? await bcrypt.compare(password, user.passwordHash)
+      : false;
 
-    // Verify entered password using bcrypt.compare
-    const isPasswordCorrect = await bcrypt.compare(password, user.passwordHash);
-
-    if (!isPasswordCorrect) {
-      return res.status(401).json({ error: 'Auth Error', message: 'Invalid credentials. Incorrect password.' });
+    if (!user || !isPasswordCorrect) {
+      return res.status(401).json({ error: 'Auth Error', message: 'Invalid email or password.' });
     }
 
     res.json({
@@ -191,6 +188,38 @@ const getUserProfile = async (req, res, next) => {
   }
 };
 
+const updateUserProfile = async (req, res, next) => {
+  try {
+    const allowedFields = ['name', 'department', 'batch', 'phone', 'emergencyContact'];
+    const updates = {};
+
+    for (const field of allowedFields) {
+      if (Object.prototype.hasOwnProperty.call(req.body, field)) {
+        updates[field] = String(req.body[field] || '').trim();
+      }
+    }
+
+    for (const requiredField of ['name', 'department', 'batch']) {
+      if (Object.prototype.hasOwnProperty.call(updates, requiredField) && !updates[requiredField]) {
+        return res.status(400).json({
+          error: 'Validation Error',
+          message: `${requiredField} cannot be empty.`
+        });
+      }
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: updates },
+      { new: true, runValidators: true }
+    ).select('-passwordHash');
+
+    return res.json({ success: true, message: 'Profile updated successfully.', user });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 // @desc    Get all users
 // @route   GET /api/auth/users
 // @access  Private/Admin
@@ -239,10 +268,67 @@ const updateUserRole = async (req, res, next) => {
   }
 };
 
+const deleteUser = async (req, res, next) => {
+  try {
+    const Membership = require('../models/Membership');
+    const RSVP = require('../models/RSVP');
+    const Attendance = require('../models/Attendance');
+    const Event = require('../models/Event');
+    const Society = require('../models/Society');
+
+    if (req.user._id.toString() === req.params.id) {
+      return res.status(400).json({ error: 'Validation Error', message: 'You cannot delete your own account.' });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ error: 'Not Found', message: 'User not found.' });
+    if (user.role === 'admin') {
+      return res.status(403).json({ error: 'Forbidden', message: 'Administrator accounts are protected from deletion.' });
+    }
+
+    const ownedEventCount = await Event.countDocuments({ createdBy: user._id });
+    if (ownedEventCount > 0) {
+      return res.status(409).json({
+        error: 'Conflict Error',
+        message: 'Reassign or delete this executive\'s events before deleting the account.'
+      });
+    }
+
+    const [memberships, rsvps] = await Promise.all([
+      Membership.find({ userId: user._id }).select('societyId'),
+      RSVP.find({ userId: user._id }).select('eventId')
+    ]);
+
+    await Promise.all(rsvps.map((rsvp) => Event.updateOne(
+      { _id: rsvp.eventId, registered: { $gt: 0 } },
+      { $inc: { registered: -1 } }
+    )));
+    await Promise.all([
+      Attendance.deleteMany({ userId: user._id }),
+      RSVP.deleteMany({ userId: user._id }),
+      Membership.deleteMany({ userId: user._id }),
+      Society.updateMany({}, { $pull: { executiveBody: { userId: user._id } } })
+    ]);
+
+    const societyIds = [...new Set(memberships.map((item) => String(item.societyId)))];
+    await Promise.all(societyIds.map(async (societyId) => {
+      const memberCount = await Membership.countDocuments({ societyId, status: 'approved' });
+      await Society.updateOne({ _id: societyId }, { $set: { memberCount } });
+    }));
+
+    await User.deleteOne({ _id: user._id });
+    return res.json({ success: true, message: 'User account and personal participation records deleted.' });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getUserProfile,
+  updateUserProfile,
   getAllUsers,
-  updateUserRole
+  updateUserRole,
+  deleteUser
 };

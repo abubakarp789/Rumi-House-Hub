@@ -57,8 +57,8 @@ export default function Register() {
       errors.registrationNumber = 'Use format NUM-DEPT-YYYY-ID, e.g. NUM-BSCS-2222-41.';
     }
 
-    if (!formData.password || formData.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters.';
+    if (!formData.password || formData.password.length < 8) {
+      errors.password = 'Password must be at least 8 characters.';
     }
 
     if (formData.password !== formData.confirmPassword) {
@@ -250,7 +250,7 @@ export default function Register() {
                   name="password" 
                   type={showPassword ? 'text' : 'password'}
                   className="w-full border border-outline-variant bg-surface-container-lowest p-3 font-body-md text-body-md transition-all outline-none focus:border-primary focus:ring-0" 
-                  placeholder="At least 6 chars" 
+                  placeholder="At least 8 characters"
                   value={formData.password} 
                   onChange={handleInputChange} 
                   disabled={loading} 

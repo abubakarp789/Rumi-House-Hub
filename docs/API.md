@@ -2,6 +2,20 @@
 
 All API requests target the `/api` prefix and expect JSON payloads and responses.
 
+## CRUD Endpoint Matrix
+
+| Resource | Create | Read | Update | Delete / Domain Action |
+|---|---|---|---|---|
+| User | `POST /auth/register` | `GET /auth/me`, `GET /auth/users` | `PATCH /auth/me`, `PATCH /auth/users/:id/role` | `DELETE /auth/users/:id` |
+| Society | `POST /societies` | `GET /societies`, `GET /societies/:id` | `PATCH /societies/:id` | `DELETE /societies/:id` |
+| Membership | `POST /societies/:id/join` | `GET /auth/me`, `GET /societies/memberships/all` | `PATCH /societies/:id/memberships/:membershipId/status` | `DELETE /societies/:id/memberships/:membershipId` |
+| Event | `POST /events` | `GET /events`, `GET /events/:id` | `PATCH /events/:id`, `PATCH /events/:id/status` | `DELETE /events/:id` |
+| RSVP | `POST /events/:id/rsvp` | `GET /auth/me`, `GET /events/:id/qr` | Generated pass state is server-managed | `DELETE /events/:id/rsvp` |
+| Attendance | `POST /events/:id/attendance/checkin` | `GET /events/:id/attendance` | Check-in is immutable | `DELETE /events/:id/attendance/:attendanceId` |
+| News | `POST /news` | `GET /news`, `GET /news/:id` | `PATCH /news/:id` | `DELETE /news/:id` |
+
+All update payloads are field-whitelisted. Account, society, event, membership, RSVP, and attendance deletions apply ownership or role authorization before changing data.
+
 ## Authentication (`/api/auth`)
 
 ### Register User

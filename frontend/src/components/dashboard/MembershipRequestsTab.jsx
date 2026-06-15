@@ -10,7 +10,8 @@ export default function MembershipRequestsTab({
   handleBulkModerateMemberships,
   handleSelectAllMemberships,
   handleSelectMembership,
-  handleModerateMembership
+  handleModerateMembership,
+  handleDeleteMembership
 }) {
   return (
     <div className="space-y-8 animate-fade-in">
@@ -140,6 +141,18 @@ export default function MembershipRequestsTab({
                             title="Approve Member"
                           >
                             <span className="material-symbols-outlined text-lg">check_circle</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (window.confirm('Permanently delete this membership request?')) {
+                                handleDeleteMembership(m.societyId._id, m._id);
+                              }
+                            }}
+                            className="p-1 text-slate-500 hover:text-red-800 hover:bg-red-50 transition-all rounded"
+                            title="Delete Request"
+                          >
+                            <span className="material-symbols-outlined text-lg">delete</span>
                           </button>
                           <button 
                             onClick={() => handleModerateMembership(m.societyId._id, m._id, 'rejected')}

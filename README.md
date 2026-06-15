@@ -4,7 +4,7 @@ Rumi House Hub is a full-stack MERN platform designed for student engagement, ev
 
 ## Technical Stack
 
-* **Frontend:** React 18, Vite, React Router 6, GSAP animations, Vitest.
+* **Frontend:** React 18, Vite, React Router 6, Tailwind CSS, scoped Bootstrap 5 grid utilities, GSAP animations, Vitest.
 * **Backend:** Node.js, Express, MongoDB (Mongoose), JWT authentication (24-hour expiry), bcrypt password hashing, Node native test runner.
 
 ---
@@ -14,6 +14,8 @@ Rumi House Hub is a full-stack MERN platform designed for student engagement, ev
 * **Student:** Can browse societies and approved events, request society membership, RSVP to upcoming events, and access personal QR gate passes.
 * **Executive:** Can propose events for their authorized societies, inspect live attendance check-in sheets, and verify attendee tickets using a pass token scanner.
 * **Admin:** Retains moderation privileges to approve/reject proposed events and membership applications, manage user roles, and publish campus news bulletins.
+
+The application exposes domain-appropriate CRUD operations for user profiles, accounts, societies, memberships, events, RSVPs, attendance records, and news bulletins. Destructive operations are protected by role and ownership checks and clean up dependent records where required.
 
 ---
 

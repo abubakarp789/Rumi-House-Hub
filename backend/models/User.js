@@ -39,6 +39,16 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Batch year is required'],
     trim: true
   },
+  phone: {
+    type: String,
+    trim: true,
+    maxlength: [30, 'Phone number is too long']
+  },
+  emergencyContact: {
+    type: String,
+    trim: true,
+    maxlength: [120, 'Emergency contact is too long']
+  },
   passwordHash: { 
     type: String, 
     required: [true, 'Password is required'] 

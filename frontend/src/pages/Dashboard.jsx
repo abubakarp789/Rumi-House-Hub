@@ -56,7 +56,7 @@ const getInitials = (name) => {
 };
 
 export default function Dashboard() {
-  const { user } = useContext(AuthContext);
+  const { user, updateProfile } = useContext(AuthContext);
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('memberships');
   const [memberships, setMemberships] = useState([]);
@@ -107,6 +107,30 @@ export default function Dashboard() {
       setQrPasses((prev) => ({ ...prev, [eventId]: data }));
     } catch (err) {
       console.error('Failed to load QR code pass:', err);
+    }
+  };
+
+  const handleMembershipDelete = async (membership) => {
+    try {
+      await api.deleteMembership(membership.societyId?._id || membership.societyId, membership._id);
+      setMemberships((prev) => prev.filter((item) => item._id !== membership._id));
+    } catch (err) {
+      setError(err.message || 'Failed to remove membership.');
+    }
+  };
+
+  const handleCancelRsvp = async (rsvp) => {
+    try {
+      const eventId = rsvp.eventId?._id || rsvp.eventId;
+      await api.cancelRsvp(eventId);
+      setRsvps((prev) => prev.filter((item) => item._id !== rsvp._id));
+      setQrPasses((prev) => {
+        const next = { ...prev };
+        delete next[eventId];
+        return next;
+      });
+    } catch (err) {
+      setError(err.message || 'Failed to cancel RSVP.');
     }
   };
 
@@ -203,7 +227,7 @@ export default function Dashboard() {
       {/* Content Panels */}
       <div className="min-h-[400px]">
         {activeTab === 'memberships' && (
-          <MembershipsTab memberships={memberships} />
+          <MembershipsTab memberships={memberships} handleMembershipDelete={handleMembershipDelete} />
         )}
 
         {activeTab === 'rsvps' && (
@@ -211,6 +235,7 @@ export default function Dashboard() {
             rsvps={rsvps} 
             qrPasses={qrPasses} 
             handleLoadQr={handleLoadQr} 
+            handleCancelRsvp={handleCancelRsvp}
           />
         )}
 
@@ -218,6 +243,7 @@ export default function Dashboard() {
           <ProfileTab 
             user={user} 
             getInitials={getInitials} 
+            updateProfile={updateProfile}
           />
         )}
       </div>

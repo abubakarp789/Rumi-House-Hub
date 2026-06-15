@@ -7,14 +7,16 @@ export default function ProposeEventTab({
   proposalErrors,
   proposing,
   handleInputChange,
-  handleProposalSubmit
+  handleProposalSubmit,
+  editingEventId,
+  handleCancelEventEdit
 }) {
   return (
     <div className="max-w-3xl mx-auto animate-fade-in">
       <div className="bg-white border border-outline-variant p-6 md:p-10 shadow-sm">
         <div className="border-l-4 border-primary pl-6 mb-8">
           <h2 className="font-headline-md text-headline-md text-primary font-bold text-2xl">
-            Draft Campus Event Proposal
+            {editingEventId ? 'Edit Campus Event Proposal' : 'Draft Campus Event Proposal'}
           </h2>
           <p className="text-on-surface-variant text-sm mt-1">Submit rigorous co-curricular outlines for academic and moderation review.</p>
         </div>
@@ -104,8 +106,6 @@ export default function ProposeEventTab({
                 <option value="workshop">Workshop</option>
                 <option value="competition">Competition</option>
                 <option value="sports">Sports Gala</option>
-                <option value="orientation">Orientation</option>
-                <option value="meetup">Meetup</option>
               </select>
             </div>
 
@@ -184,8 +184,17 @@ export default function ProposeEventTab({
             className="w-full py-4 bg-primary text-white font-bold hover:bg-primary-container transition-all flex items-center justify-center gap-2 font-label-uppercase text-label-uppercase tracking-widest text-xs uppercase"
           >
             <span className="material-symbols-outlined text-lg">add_circle</span>
-            {proposing ? 'Submitting proposal for audit...' : 'Submit Event for Admin Review'}
+            {proposing ? 'Saving proposal...' : editingEventId ? 'Update & Resubmit for Review' : 'Submit Event for Admin Review'}
           </button>
+          {editingEventId && (
+            <button
+              type="button"
+              onClick={handleCancelEventEdit}
+              className="w-full border border-outline text-on-surface px-6 py-3 hover:bg-surface-container-low font-label-uppercase text-xs font-bold tracking-widest uppercase"
+            >
+              Cancel Edit
+            </button>
+          )}
         </form>
       </div>
     </div>

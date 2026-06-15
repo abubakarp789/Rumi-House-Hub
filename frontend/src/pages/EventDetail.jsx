@@ -248,7 +248,7 @@ export default function EventDetail() {
                         <p className="text-body-sm text-on-surface-variant opacity-80 text-center mb-4">
                           Please sign in with your student credentials to reserve your seat at this event.
                         </p>
-                        <Link to="/login" className="w-full py-4 bg-primary text-on-primary font-label-uppercase text-label-uppercase hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center justify-center gap-2 text-center text-xs">
+                        <Link to="/login" className="w-full py-4 bg-primary text-on-primary font-label-uppercase text-label-uppercase hover:bg-primary-container hover:text-white transition-all flex items-center justify-center gap-2 text-center text-xs">
                           Sign In to RSVP <span className="material-symbols-outlined">arrow_forward</span>
                         </Link>
                       </>
@@ -264,7 +264,7 @@ export default function EventDetail() {
                         <button 
                           onClick={handleRsvpSubmit} 
                           disabled={submitting || isSoldOut}
-                          className="w-full py-4 bg-primary text-on-primary font-bold hover:bg-primary-container hover:text-on-primary-container transition-all flex items-center justify-center gap-2 font-label-uppercase text-label-uppercase tracking-widest text-xs"
+                          className="w-full py-4 bg-primary text-on-primary font-bold hover:bg-primary-container hover:text-white transition-all flex items-center justify-center gap-2 font-label-uppercase text-label-uppercase tracking-widest text-xs"
                         >
                           {submitting ? 'PROCESSING RSVP...' : isSoldOut ? 'SOLD OUT' : 'CONFIRM RSVP'}
                         </button>

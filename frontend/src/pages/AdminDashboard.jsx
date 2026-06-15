@@ -27,6 +27,8 @@ export default function AdminDashboard() {
   // Forms states
   const [socFormData, setSocFormData] = useState({ name: '', description: '', patronName: '', category: 'social' });
   const [newsFormData, setNewsFormData] = useState({ title: '', summary: '', content: '', category: 'newsletter' });
+  const [editingSocietyId, setEditingSocietyId] = useState('');
+  const [editingNewsId, setEditingNewsId] = useState('');
   const [socSuccess, setSocSuccess] = useState('');
   const [newsSuccess, setNewsSuccess] = useState('');
   const [socError, setSocError] = useState('');
@@ -115,6 +117,16 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDeleteMembership = async (societyId, membershipId) => {
+    try {
+      await api.deleteMembership(societyId, membershipId);
+      setPendingMemberships((prev) => prev.filter((item) => item._id !== membershipId));
+      setSelectedMemberships((prev) => prev.filter((id) => id !== membershipId));
+    } catch (err) {
+      setError(err.message || 'Failed to delete membership request.');
+    }
+  };
+
   // Bulk Operations
   const handleBulkModerateMemberships = async (status) => {
     if (selectedMemberships.length === 0) return;
@@ -174,15 +186,44 @@ export default function AdminDashboard() {
 
     try {
       setSocSubmitting(true);
-      const response = await api.createSociety(socFormData);
-      setSocSuccess(response.message || 'Society initialized and published successfully!');
+      const response = editingSocietyId
+        ? await api.updateSociety(editingSocietyId, socFormData)
+        : await api.createSociety(socFormData);
+      setSocSuccess(response.message || 'Society saved successfully!');
       setSocFormData({ name: '', description: '', patronName: '', category: 'social' });
+      setEditingSocietyId('');
       loadAdminChecklists();
     } catch (err) {
       console.error(err);
       setSocError(err.message || 'Failed to initialize society.');
     } finally {
       setSocSubmitting(false);
+    }
+  };
+
+  const handleSocietyEdit = (society) => {
+    setEditingSocietyId(society._id);
+    setSocFormData({
+      name: society.name || '',
+      description: society.description || '',
+      patronName: society.patronName || '',
+      category: society.category || 'social'
+    });
+    setSocSuccess('');
+    setSocError('');
+  };
+
+  const handleSocietyDelete = async (societyId) => {
+    try {
+      await api.deleteSociety(societyId);
+      if (editingSocietyId === societyId) {
+        setEditingSocietyId('');
+        setSocFormData({ name: '', description: '', patronName: '', category: 'social' });
+      }
+      setSocSuccess('Society and related records deleted successfully.');
+      await loadAdminChecklists();
+    } catch (err) {
+      setSocError(err.message || 'Failed to delete society.');
     }
   };
 
@@ -198,9 +239,12 @@ export default function AdminDashboard() {
 
     try {
       setNewsSubmitting(true);
-      const response = await api.createNews(newsFormData);
-      setNewsSuccess(response.message || 'News article published successfully in co-curricular bulletin!');
+      const response = editingNewsId
+        ? await api.updateNews(editingNewsId, newsFormData)
+        : await api.createNews(newsFormData);
+      setNewsSuccess(response.message || 'News article saved successfully!');
       setNewsFormData({ title: '', summary: '', content: '', category: 'newsletter' });
+      setEditingNewsId('');
       loadAdminChecklists();
     } catch (err) {
       console.error(err);
@@ -208,6 +252,18 @@ export default function AdminDashboard() {
     } finally {
       setNewsSubmitting(false);
     }
+  };
+
+  const handleNewsEdit = (article) => {
+    setEditingNewsId(article._id);
+    setNewsFormData({
+      title: article.title || '',
+      summary: article.summary || '',
+      content: article.content || '',
+      category: article.category || 'newsletter'
+    });
+    setNewsSuccess('');
+    setNewsError('');
   };
 
   const handleNewsDelete = async (newsId) => {
@@ -236,6 +292,19 @@ export default function AdminDashboard() {
     } catch (err) {
       console.error(err);
       setError(err.message || 'Failed to update user role.');
+    } finally {
+      setRoleLoading(false);
+    }
+  };
+
+  const handleUserDelete = async (userId) => {
+    try {
+      setRoleLoading(true);
+      await api.deleteUser(userId);
+      setUsersList((prev) => prev.filter((item) => item._id !== userId));
+      setRoleSuccess('User account deleted successfully.');
+    } catch (err) {
+      setError(err.message || 'Failed to delete user account.');
     } finally {
       setRoleLoading(false);
     }
@@ -453,6 +522,7 @@ export default function AdminDashboard() {
             handleSelectAllMemberships={handleSelectAllMemberships} 
             handleSelectMembership={handleSelectMembership} 
             handleModerateMembership={handleModerateMembership} 
+            handleDeleteMembership={handleDeleteMembership}
           />
         )}
 
@@ -465,6 +535,10 @@ export default function AdminDashboard() {
             socError={socError} 
             socSubmitting={socSubmitting} 
             handleSocSubmit={handleSocSubmit} 
+            editingSocietyId={editingSocietyId}
+            setEditingSocietyId={setEditingSocietyId}
+            handleSocietyEdit={handleSocietyEdit}
+            handleSocietyDelete={handleSocietyDelete}
           />
         )}
 
@@ -480,6 +554,9 @@ export default function AdminDashboard() {
             newsError={newsError} 
             newsSubmitting={newsSubmitting} 
             handleNewsSubmit={handleNewsSubmit} 
+            editingNewsId={editingNewsId}
+            setEditingNewsId={setEditingNewsId}
+            handleNewsEdit={handleNewsEdit}
             handleNewsDelete={handleNewsDelete}
           />
         )}
@@ -493,6 +570,7 @@ export default function AdminDashboard() {
             roleSuccess={roleSuccess} 
             roleLoading={roleLoading} 
             handleRoleChange={handleRoleChange} 
+            handleUserDelete={handleUserDelete}
           />
         )}
 

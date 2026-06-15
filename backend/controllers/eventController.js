@@ -113,6 +113,68 @@ const createEventProposal = async (req, res, next) => {
   }
 };
 
+const updateEvent = async (req, res, next) => {
+  try {
+    const event = await Event.findById(req.params.id);
+    if (!event) return res.status(404).json({ error: 'Not Found', message: 'Event not found.' });
+    if (!canManageEvent(req.user, event)) {
+      return res.status(403).json({ error: 'Forbidden', message: 'You are not authorized to edit this event.' });
+    }
+    if (req.user.role === 'executive' && ['approved', 'past'].includes(event.status)) {
+      return res.status(400).json({ error: 'Validation Error', message: 'Approved or past events cannot be edited by executives.' });
+    }
+
+    const proposed = {
+      societyId: req.body.societyId || event.societyId,
+      title: req.body.title ?? event.title,
+      description: req.body.description ?? event.description,
+      type: req.body.type ?? event.type,
+      location: req.body.location ?? event.location,
+      startDateTime: req.body.startDateTime ?? event.startDateTime,
+      endDateTime: req.body.endDateTime ?? event.endDateTime,
+      capacity: req.body.capacity ?? event.capacity
+    };
+    const capacity = Number.parseInt(proposed.capacity, 10);
+    const start = new Date(proposed.startDateTime);
+    const end = new Date(proposed.endDateTime);
+
+    if (!String(proposed.title).trim() || !String(proposed.description).trim() || !String(proposed.location).trim()) {
+      return res.status(400).json({ error: 'Validation Error', message: 'Title, description, and location are required.' });
+    }
+    if (!['seminar', 'workshop', 'competition', 'sports'].includes(proposed.type)) {
+      return res.status(400).json({ error: 'Validation Error', message: 'Valid event type is required.' });
+    }
+    if (!Number.isInteger(capacity) || capacity < 1 || capacity < event.registered) {
+      return res.status(400).json({ error: 'Validation Error', message: 'Capacity must cover all existing registrations.' });
+    }
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) {
+      return res.status(400).json({ error: 'Validation Error', message: 'Event end date and time must be after the start.' });
+    }
+
+    const society = await Society.findById(proposed.societyId);
+    if (!society) return res.status(404).json({ error: 'Not Found', message: 'Hosting society not found.' });
+    if (!canProposeForSociety(req.user, society)) {
+      return res.status(403).json({ error: 'Forbidden', message: 'You can only assign events to a society you lead.' });
+    }
+
+    event.societyId = society._id;
+    event.title = String(proposed.title).trim();
+    event.description = String(proposed.description).trim();
+    event.type = proposed.type;
+    event.location = String(proposed.location).trim();
+    event.startDateTime = start;
+    event.endDateTime = end;
+    event.capacity = capacity;
+    if (req.user.role === 'executive') event.status = 'pendingApproval';
+    event.rejectionReason = undefined;
+    await event.save();
+
+    return res.json({ success: true, message: 'Event updated successfully.', event });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const VALID_TRANSITIONS = {
   draft: ['pendingApproval'],
   pendingApproval: ['approved', 'rejected'],
@@ -190,6 +252,22 @@ const rsvpEvent = async (req, res, next) => {
   }
 };
 
+const cancelRsvp = async (req, res, next) => {
+  try {
+    const attended = await Attendance.exists({ eventId: req.params.id, userId: req.user._id });
+    if (attended) {
+      return res.status(409).json({ error: 'Conflict Error', message: 'A checked-in event pass cannot be cancelled.' });
+    }
+    const rsvp = await RSVP.findOneAndDelete({ eventId: req.params.id, userId: req.user._id });
+    if (!rsvp) return res.status(404).json({ error: 'Not Found', message: 'RSVP not found.' });
+
+    await Event.updateOne({ _id: req.params.id, registered: { $gt: 0 } }, { $inc: { registered: -1 } });
+    return res.json({ success: true, message: 'RSVP cancelled successfully.' });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const getEventQr = async (req, res, next) => {
   try {
     const event = await Event.findById(req.params.id);
@@ -261,10 +339,12 @@ const deleteEvent = async (req, res, next) => {
 
 module.exports = { 
   createEventProposal, 
+  updateEvent,
   getEventById, 
   getEventQr, 
   getEvents, 
   rsvpEvent, 
+  cancelRsvp,
   updateEventStatus,
   deleteEvent
 };

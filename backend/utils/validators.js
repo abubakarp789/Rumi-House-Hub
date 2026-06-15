@@ -2,7 +2,7 @@
 
 const isValidNamalEmail = (email) => {
   if (!email) return false;
-  return email.toLowerCase().endsWith('@namal.edu.pk');
+  return /^[^\s@]+@namal\.edu\.pk$/i.test(String(email).trim());
 };
 
 const isValidRegNumber = (regNum) => {

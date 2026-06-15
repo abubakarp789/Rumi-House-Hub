@@ -8,7 +8,11 @@ export default function SocietiesSetupTab({
   socSuccess,
   socError,
   socSubmitting,
-  handleSocSubmit
+  handleSocSubmit,
+  editingSocietyId,
+  setEditingSocietyId,
+  handleSocietyEdit,
+  handleSocietyDelete
 }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in">
@@ -49,7 +53,26 @@ export default function SocietiesSetupTab({
                 </div>
                 <div className="relative z-10 border-t border-slate-100 pt-4 mt-4 flex justify-between items-center text-xs">
                   <span className="text-emerald-800 font-bold uppercase tracking-widest text-[9px]">ACTIVE CHARTER</span>
-                  <span className="text-slate-400">Authenticated Node</span>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleSocietyEdit(soc)}
+                      className="text-emerald-700 hover:text-emerald-900 font-bold"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (window.confirm('Delete this society and all related events, memberships, RSVPs, and attendance records?')) {
+                          handleSocietyDelete(soc._id);
+                        }
+                      }}
+                      className="text-red-600 hover:text-red-800 font-bold"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </article>
             ))}
@@ -60,7 +83,7 @@ export default function SocietiesSetupTab({
       <div className="lg:col-span-4">
         <article className="bg-white border border-slate-200 p-6 md:p-8 rounded-lg shadow-sm">
           <h3 className="font-headline-sm text-xl text-emerald-950 font-serif font-bold border-b border-slate-100 pb-4 mb-6">
-            Initialize New Society
+            {editingSocietyId ? 'Edit Society Charter' : 'Initialize New Society'}
           </h3>
           
           {socSuccess && (
@@ -141,8 +164,20 @@ export default function SocietiesSetupTab({
               className="w-full py-3 bg-emerald-700 text-white font-bold hover:bg-emerald-800 transition-all text-xs uppercase tracking-widest flex items-center justify-center gap-2 rounded shadow-sm"
             >
               <span className="material-symbols-outlined text-sm">verified_user</span>
-              {socSubmitting ? 'Initializing charter...' : 'Confirm & Register'}
+              {socSubmitting ? 'Saving charter...' : editingSocietyId ? 'Update Society' : 'Confirm & Register'}
             </button>
+            {editingSocietyId && (
+              <button
+                type="button"
+                onClick={() => {
+                  setEditingSocietyId('');
+                  setSocFormData({ name: '', description: '', patronName: '', category: 'social' });
+                }}
+                className="w-full py-3 border border-slate-300 text-slate-600 font-bold hover:bg-slate-50 text-xs uppercase tracking-widest rounded"
+              >
+                Cancel Edit
+              </button>
+            )}
           </form>
         </article>
       </div>

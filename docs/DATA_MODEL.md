@@ -13,6 +13,8 @@ Represents students, executive organizers, and system administrators.
   * `role` (String, required, enum): `student`, `executive`, or `admin`. Default is `student`.
   * `department` (String, required): Student's major department.
   * `batch` (String, required): batch year.
+  * `phone` (String, optional): Student contact number.
+  * `emergencyContact` (String, optional): Emergency contact details.
   * `passwordHash` (String, required): Salted bcrypt password hash.
 
 ### 2. Society Model (`Society`)
@@ -59,8 +61,8 @@ Tracks student seat reservations and individual gate check-in pass keys.
 * **Fields:**
   * `eventId` (ObjectId, ref: `Event`, required): Reference to the event.
   * `userId` (ObjectId, ref: `User`, required): Reference to the student user.
-  * `status` (String, required, enum): `going`, `checked-in`. Default: `going`.
-  * `passToken` (String, required, unique, select: false): Unique digital pass token generated with `pass_` prefix.
+  * `status` (String, required, enum): `going`, `interested`, or `cancelled`. Default: `going`.
+  * `passToken` (String, unique, sparse, select: false): Unique digital pass token generated with `pass_` prefix.
 * **Indices:**
   * Compound index `eventId: 1, userId: 1` enforces unique RSVPs.
 
@@ -70,7 +72,7 @@ Stores entry verification logs recorded at venue gates by organizers.
   * `eventId` (ObjectId, ref: `Event`, required): Verified event.
   * `userId` (ObjectId, ref: `User`, required): Checked-in student.
   * `checkInTime` (Date, default: Date.now): Exact entry verification time.
-  * `checkInMethod` (String, required, enum): `qr`, `manual`.
+  * `checkInMethod` (String, required, enum): `qr`, `code`, or `manual`.
 * **Indices:**
   * Compound index `eventId: 1, userId: 1` prevents double check-ins.
 
@@ -80,8 +82,8 @@ Co-curricular bulletins, newsletters, and announcements.
   * `title` (String, required): News title.
   * `summary` (String, required): One-line summary.
   * `content` (String, required): Full text details.
-  * `category` (String, required, enum): `events`, `visit`, `academics`, `newsletter`.
-  * `image` (String): Optional URL path for bulletin thumbnail.
+  * `category` (String, required, enum): `newsletter`, `alert`, or `visit`.
+  * `status` (String, required, enum): `draft` or `published`.
   * `publishedAt` (Date, default: Date.now): Publication timestamp.
   * `publishedBy` (ObjectId, ref: `User`, required): Creator admin.
 

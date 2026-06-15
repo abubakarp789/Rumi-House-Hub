@@ -7,7 +7,8 @@ export default function UsersRolesTab({
   filteredUsers,
   roleSuccess,
   roleLoading,
-  handleRoleChange
+  handleRoleChange,
+  handleUserDelete
 }) {
   return (
     <div className="space-y-8 animate-fade-in">
@@ -35,33 +36,33 @@ export default function UsersRolesTab({
       </div>
 
       {/* Bento-style stats overview cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div className="bg-white border border-slate-200 p-6 rounded-lg shadow-sm border-l-4 border-l-emerald-700 relative overflow-hidden">
+      <div className="row g-3" aria-label="User registry summary">
+        <div className="col-12 col-sm-6 col-xl-3"><div className="h-100 bg-white border border-slate-200 p-6 rounded-lg shadow-sm border-l-4 border-l-emerald-700 relative overflow-hidden">
           <p className="font-label-uppercase text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Total Users</p>
           <h3 className="font-headline-sm text-2xl font-serif font-bold text-emerald-950">{usersList.length}</h3>
           <div className="flex items-center gap-1 text-emerald-700 text-[10px] font-bold mt-2">
             <span className="material-symbols-outlined text-xs">group</span>
             <span>Registered accounts</span>
           </div>
-        </div>
-        <div className="bg-white border border-slate-200 p-6 rounded-lg shadow-sm border-l-4 border-l-amber-500">
+        </div></div>
+        <div className="col-12 col-sm-6 col-xl-3"><div className="h-100 bg-white border border-slate-200 p-6 rounded-lg shadow-sm border-l-4 border-l-amber-500">
           <p className="font-label-uppercase text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Administrators</p>
           <h3 className="font-headline-sm text-2xl font-serif font-bold text-emerald-950">{usersList.filter(u => u.role === 'admin').length}</h3>
           <p className="text-slate-500 text-[10px] mt-2 flex items-center gap-1">
             <span className="material-symbols-outlined text-xs text-slate-400">shield</span>
             Protected Status
           </p>
-        </div>
-        <div className="bg-white border border-slate-200 p-6 rounded-lg shadow-sm border-l-4 border-l-amber-300">
+        </div></div>
+        <div className="col-12 col-sm-6 col-xl-3"><div className="h-100 bg-white border border-slate-200 p-6 rounded-lg shadow-sm border-l-4 border-l-amber-300">
           <p className="font-label-uppercase text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Executives</p>
           <h3 className="font-headline-sm text-2xl font-serif font-bold text-amber-700">{usersList.filter(u => u.role === 'executive').length}</h3>
           <p className="text-slate-500 text-[10px] mt-2">Society leaders</p>
-        </div>
-        <div className="bg-white border border-slate-200 p-6 rounded-lg shadow-sm border-l-4 border-l-slate-400">
+        </div></div>
+        <div className="col-12 col-sm-6 col-xl-3"><div className="h-100 bg-white border border-slate-200 p-6 rounded-lg shadow-sm border-l-4 border-l-slate-400">
           <p className="font-label-uppercase text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Students</p>
           <h3 className="font-headline-sm text-2xl font-serif font-bold text-emerald-900">{usersList.filter(u => u.role === 'student').length}</h3>
           <p className="text-slate-500 text-[10px] mt-2 font-mono">Active learners</p>
-        </div>
+        </div></div>
       </div>
 
       {roleSuccess && (
@@ -139,15 +140,31 @@ export default function UsersRolesTab({
                       {isSuper ? (
                         <span className="text-xs text-slate-400 italic">Root Protected</span>
                       ) : (
-                        <select 
-                          className="bg-slate-50 px-3 py-1.5 border border-slate-200 focus:border-emerald-700 focus:bg-white focus:ring-0 outline-none text-xs w-[130px] rounded"
-                          value={u.role} 
-                          onChange={(e) => handleRoleChange(u._id, e.target.value)}
-                          disabled={roleLoading}
-                        >
-                          <option value="student">Student</option>
-                          <option value="executive">Executive</option>
-                        </select>
+                        <div className="flex justify-end gap-2">
+                          <select
+                            className="bg-slate-50 px-3 py-1.5 border border-slate-200 focus:border-emerald-700 focus:bg-white focus:ring-0 outline-none text-xs w-[130px] rounded"
+                            value={u.role}
+                            onChange={(e) => handleRoleChange(u._id, e.target.value)}
+                            disabled={roleLoading}
+                          >
+                            <option value="student">Student</option>
+                            <option value="executive">Executive</option>
+                          </select>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (window.confirm(`Delete ${u.name}'s account and participation records?`)) {
+                                handleUserDelete(u._id);
+                              }
+                            }}
+                            disabled={roleLoading}
+                            className="p-2 text-red-600 border border-red-200 rounded hover:bg-red-50 disabled:opacity-50"
+                            aria-label={`Delete user ${u.name}`}
+                            title="Delete User"
+                          >
+                            <span className="material-symbols-outlined text-sm">delete</span>
+                          </button>
+                        </div>
                       )}
                     </td>
                   </tr>
