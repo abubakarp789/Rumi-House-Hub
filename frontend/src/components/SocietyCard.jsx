@@ -1,17 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import workshopImg from '../assets/landing/news-workshop.png';
-import poetryImg from '../assets/landing/news-poetry.png';
-import cleanupImg from '../assets/landing/news-cleanup.png';
 import academicImg from '../assets/landing/namal-academic-block-display.jpg';
 import courtyardImg from '../assets/landing/namal-courtyard-display.jpg';
 
 const CATEGORY_IMAGES = {
-  technical: workshopImg,
-  arts: poetryImg,
-  literary: poetryImg,
+  technical: '/societies/ncs_banner.png',
+  arts: '/societies/lds_banner.png',
+  literary: '/societies/lds_banner.png',
   sports: courtyardImg,
-  social: cleanupImg,
+  social: '/societies/von_banner.png',
   default: academicImg
 };
 

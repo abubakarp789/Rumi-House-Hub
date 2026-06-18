@@ -1,7 +1,3 @@
-import cleanupImg from '../assets/landing/news-cleanup.png';
-import poetryImg from '../assets/landing/news-poetry.png';
-import workshopImg from '../assets/landing/news-workshop.png';
-
 export const fallbackSocieties = [
   {
     _id: 'fallback-literary',
@@ -87,7 +83,7 @@ export const fallbackNews = [
     category: 'EVENTS',
     summary: 'Students from multiple societies joined hands to clean and green key areas around campus and the lake.',
     publishedAt: '2025-06-18T10:00:00+05:00',
-    image: cleanupImg
+    image: '/news/convocation_2023.png'
   },
   {
     _id: 'fallback-poetry-news',
@@ -96,7 +92,7 @@ export const fallbackNews = [
     category: 'ACADEMICS',
     summary: 'An evening of powerful verses and meaningful conversations hosted by the Literary Society.',
     publishedAt: '2025-06-15T10:00:00+05:00',
-    image: poetryImg
+    image: '/news/net_admission.png'
   },
   {
     _id: 'fallback-neural-news',
@@ -105,6 +101,6 @@ export const fallbackNews = [
     category: 'TECHNOLOGY',
     summary: 'Hands-on session exploring the future of AI and deep learning with real-world applications.',
     publishedAt: '2025-06-12T10:00:00+05:00',
-    image: workshopImg
+    image: '/events/ai_workshop.png'
   }
 ];

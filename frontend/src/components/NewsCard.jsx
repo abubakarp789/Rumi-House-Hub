@@ -1,16 +1,13 @@
 import React from 'react';
-import cleanupImg from '../assets/landing/news-cleanup.png';
-import poetryImg from '../assets/landing/news-poetry.png';
-import workshopImg from '../assets/landing/news-workshop.png';
 
 const NEWS_DEFAULT_IMAGES = {
-  events: cleanupImg,
-  visit: cleanupImg,
-  academics: poetryImg,
-  literary: poetryImg,
-  technology: workshopImg,
-  technical: workshopImg,
-  default: cleanupImg
+  events: '/news/convocation_2023.png',
+  visit: '/news/convocation_2023.png',
+  academics: '/news/net_admission.png',
+  literary: '/news/net_admission.png',
+  technology: '/events/ai_workshop.png',
+  technical: '/events/ai_workshop.png',
+  default: '/news/convocation_2023.png'
 };
 
 export default function NewsCard({ newsItem, onReadMore }) {

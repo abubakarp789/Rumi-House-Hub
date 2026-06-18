@@ -1,17 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import workshopImg from '../assets/landing/news-workshop.png';
-import poetryImg from '../assets/landing/news-poetry.png';
-import cleanupImg from '../assets/landing/news-cleanup.png';
 import academicImg from '../assets/landing/namal-academic-block-display.jpg';
 import courtyardImg from '../assets/landing/namal-courtyard-display.jpg';
 
 const EVENT_IMAGES = {
-  workshops: workshopImg,
+  workshops: '/events/ai_workshop.png',
   competitions: academicImg,
-  seminars: poetryImg,
+  seminars: '/events/math_carnival.png',
   sports: courtyardImg,
-  default: cleanupImg
+  default: '/events/blood_drive.png'
 };
 
 const CATEGORY_COLORS = {
